@@ -112,7 +112,8 @@ public class LoginFragment extends Fragment {
     buttonLog.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-te
+
+        progressBar.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         String email, password;
 
