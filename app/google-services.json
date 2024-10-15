@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "810128493198",
+    "project_id": "share-the-ride-9cb92",
+    "storage_bucket": "share-the-ride-9cb92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810128493198:android:b71e42d3e93351c72c57df",
+        "android_client_info": {
+          "package_name": "com.example.sharetheride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbMK1swD4hHQZm-vPMJNuZYW6EKkeoH6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
