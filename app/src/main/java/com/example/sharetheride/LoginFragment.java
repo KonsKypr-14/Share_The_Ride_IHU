@@ -114,7 +114,6 @@ public class LoginFragment extends Fragment {
       public void onClick(View view) {
 
         progressBar.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
         String email, password;
 
         email = editText_email.getText().toString();
