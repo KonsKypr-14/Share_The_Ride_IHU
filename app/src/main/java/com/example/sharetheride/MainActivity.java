@@ -3,6 +3,7 @@ package com.example.sharetheride;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -84,9 +85,30 @@ public class MainActivity extends AppCompatActivity
         //    //linearLayout.setVisibility(View.GONE);
         //}
         //auth.signOut();
+
+
+
+
         setContentView(R.layout.activity_home);
         setupToolbar();
         setupDrawer();
+
+        // Get the menu from the NavigationView
+        Menu menu = navigationView.getMenu();
+
+        // Find the login/register menu item
+        MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
+
+        // Update the title based on login status
+        if (user == null){
+            // User is not logged in, set to "Login/Register"
+            loginMenuItem.setTitle(R.string.menu_login_register);
+            loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
+        } else {
+            // User is logged in, set to "Logout"
+            loginMenuItem.setTitle(R.string.menu_logout);
+            loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
+        }
     }
 
     private void setupToolbar() {
@@ -179,6 +201,12 @@ public class MainActivity extends AppCompatActivity
 
     private void showFragment(@StringRes int titleId, MenuItem menuItem) {
 
+        // Get the menu from the NavigationView
+        Menu menu = navigationView.getMenu();
+
+        // Find the login/register menu item
+        MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
+
         Fragment fragment = new Fragment();
 
         switch (menuItem.getItemId()) {
@@ -193,11 +221,21 @@ public class MainActivity extends AppCompatActivity
                 break;
             //case R.id.nav_share:
             case R.id.nav_log_reg:
-                fragment = LoginFragment.newInstance(titleId);
-                //Intent intent = new Intent(getApplicationContext(), Login.class);
-                //startActivity(intent);
-                ////finish();
+                if (menuItem.toString().contentEquals(getString(R.string.menu_logout))){
 
+                    loginMenuItem.setTitle(R.string.menu_login_register);
+                    loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
+
+                    fragment = LoginFragment.newInstance(titleId);
+                    auth.signOut();
+
+                }else{
+                    fragment = LoginFragment.newInstance(titleId);
+                    
+                    // User is logged in, set to "Logout"
+                    loginMenuItem.setTitle(R.string.menu_logout);
+                    loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
+                }
                 break;
             case R.id.nav_send:
                 fragment = HomeContentFragment.newInstance(titleId);
@@ -235,12 +273,6 @@ public class MainActivity extends AppCompatActivity
     public void onDrawerStateChanged(int i) {
         //cambio de estado, puede ser STATE_IDLE, STATE_DRAGGING or STATE_SETTLING
     }
-
-
-
-
-
-
     /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
