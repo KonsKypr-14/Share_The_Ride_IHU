@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 import androidx.fragment.app.Fragment;
@@ -52,11 +55,18 @@ public class LoginFragment extends Fragment {
   ProgressBar progressBar;
   TextView textView_register, textView_reset;
 
+  private NavigationView navigationView;
+
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
   Bundle savedInstanceState) {
     View layout = inflater.inflate(R.layout.activity_login, container, false);
 
+    //// Get the menu from the NavigationView
+    //Menu menu = navigationView.getMenu();
+
+    //// Find the login/register menu item
+    //MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
 
     editText_email = layout.findViewById(R.id.email);
     editText_password = layout.findViewById(R.id.password);
@@ -135,9 +145,22 @@ public class LoginFragment extends Fragment {
                     if (task.isSuccessful()) {
                       // Sign in success, update UI with the signed-in user's information
                       //Log.d(TAG, "signInWithEmail:success");
-                      //FirebaseUser user = mAuth.getCurrentUser();
+                      FirebaseUser user = mAuth.getCurrentUser();
                       //updateUI(user);
                       Toast.makeText(getActivity(), "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                      //// User is logged in, set to "Logout"
+                      //loginMenuItem.setTitle(R.string.menu_logout);
+                      //loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
+
+                      // Notify the MainActivity to update the navigation menu
+                      if (getActivity() instanceof MainActivity) {
+                        ((MainActivity) getActivity()).updateLoginMenuItem();
+                      }
+                      // Notify the MainActivity to update the navigation menu and user state
+                      if (getActivity() instanceof MainActivity) {
+                        ((MainActivity) getActivity()).setUser(user);  // Pass the logged-in user
+                      }
                       //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                       //startActivity(intent);
                       //finish();
@@ -154,29 +177,5 @@ public class LoginFragment extends Fragment {
 
     return layout;
   }
-
-  private int getTitle(@NonNull MenuItem menuItem) {
-    switch (menuItem.getItemId()) {
-      case R.id.nav_camera:
-        return R.string.menu_camera;
-      case R.id.nav_gallery:
-        return R.string.menu_gallery;
-      case R.id.nav_tools:
-        return R.string.menu_tools;
-      //case R.id.nav_share:
-      case R.id.nav_log_reg:
-        //if (user == null) {
-        //  return R.string.menu_login_register;
-        //}else {
-          return R.string.menu_logout;
-        //}
-      case R.id.nav_send:
-        return R.string.menu_send;
-      default:
-        throw new IllegalArgumentException("menu option not implemented!!");
-    }
-  }
-
-
 }
 

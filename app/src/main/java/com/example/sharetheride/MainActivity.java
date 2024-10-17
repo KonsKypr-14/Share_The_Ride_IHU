@@ -1,6 +1,7 @@
 package com.example.sharetheride;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -116,7 +117,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(findViewById(R.id.toolbar));
     }
 
-
     private void setupDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -227,13 +227,10 @@ public class MainActivity extends AppCompatActivity
                     loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
 
                     fragment = LoginFragment.newInstance(titleId);
-                    auth.signOut();
+                    //auth.signOut();
+                    FirebaseAuth.getInstance().signOut();
                 }else{
                     fragment = LoginFragment.newInstance(titleId);
-
-                    // User is logged in, set to "Logout"
-                    loginMenuItem.setTitle(R.string.menu_logout);
-                    loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
                 }
                 break;
             case R.id.nav_send:
@@ -284,4 +281,46 @@ public class MainActivity extends AppCompatActivity
             return insets;
         });
     }*/
+
+    // Method to update the Login/Register menu item based on login status
+    public void updateLoginMenuItem() {
+        if (navigationView == null) {
+            return;  // Guard clause in case navigationView is null
+        }
+
+        Fragment fragment = new Fragment();
+
+        // Get the menu from the NavigationView
+        Menu menu = navigationView.getMenu();
+        MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
+
+        // Check login status (this could be from SharedPreferences, a ViewModel, etc.)
+        //SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        //boolean isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false);
+
+        if (user == null) {
+            loginMenuItem.setTitle(R.string.menu_logout);
+            loginMenuItem.setIcon(R.drawable.logout);
+
+            fragment = HomeContentFragment.newInstance(R.string.app_name);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                    .replace(R.id.home_content, fragment)
+                    .commit();
+
+            setTitle(getString(R.string.app_name));
+        } else {
+            loginMenuItem.setTitle(R.string.menu_logout);
+            loginMenuItem.setIcon(R.drawable.login);
+
+            //fragment = LoginFragment.newInstance(titleId);
+        }
+    }
+    public void setUser(FirebaseUser user) {
+        this.user = user;
+        updateLoginMenuItem();  // Update the menu items
+    }
+
 }
