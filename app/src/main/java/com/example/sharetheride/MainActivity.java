@@ -228,10 +228,9 @@ public class MainActivity extends AppCompatActivity
 
                     fragment = LoginFragment.newInstance(titleId);
                     auth.signOut();
-
                 }else{
                     fragment = LoginFragment.newInstance(titleId);
-                    
+
                     // User is logged in, set to "Logout"
                     loginMenuItem.setTitle(R.string.menu_logout);
                     loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
