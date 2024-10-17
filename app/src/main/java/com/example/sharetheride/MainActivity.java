@@ -299,8 +299,11 @@ public class MainActivity extends AppCompatActivity
         //boolean isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false);
 
         if (user == null) {
+            loginMenuItem.setTitle(R.string.menu_login);
+            loginMenuItem.setIcon(R.drawable.login);
+        } else {
             loginMenuItem.setTitle(R.string.menu_logout);
-            loginMenuItem.setIcon(R.drawable.logout);
+            loginMenuItem.setIcon(R.drawable.login);
 
             fragment = HomeContentFragment.newInstance(R.string.app_name);
 
@@ -311,10 +314,6 @@ public class MainActivity extends AppCompatActivity
                     .commit();
 
             setTitle(getString(R.string.app_name));
-        } else {
-            loginMenuItem.setTitle(R.string.menu_logout);
-            loginMenuItem.setIcon(R.drawable.login);
-
             //fragment = LoginFragment.newInstance(titleId);
         }
     }

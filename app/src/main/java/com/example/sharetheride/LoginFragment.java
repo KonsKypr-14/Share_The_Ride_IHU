@@ -153,14 +153,15 @@ public class LoginFragment extends Fragment {
                       //loginMenuItem.setTitle(R.string.menu_logout);
                       //loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
 
-                      // Notify the MainActivity to update the navigation menu
-                      if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).updateLoginMenuItem();
-                      }
                       // Notify the MainActivity to update the navigation menu and user state
                       if (getActivity() instanceof MainActivity) {
                         ((MainActivity) getActivity()).setUser(user);  // Pass the logged-in user
+                        ((MainActivity) getActivity()).updateLoginMenuItem();
                       }
+
+                      // Notify the MainActivity to update the navigation menu
+                      //if (getActivity() instanceof MainActivity) {
+                      //}
                       //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                       //startActivity(intent);
                       //finish();
