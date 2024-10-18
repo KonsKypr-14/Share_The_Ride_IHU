@@ -6,7 +6,7 @@
     <string name="title_click">Title Click</string>
     <string name="menu_camera">Camera</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="menu_tools">Tools</string>
+    <string name="menu_profile">Profile</string>
     <string name="menu_login">Login</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_register">Register</string>

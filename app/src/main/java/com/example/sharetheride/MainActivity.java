@@ -183,8 +183,8 @@ public class MainActivity extends AppCompatActivity
                 return R.string.menu_camera;
             case R.id.nav_gallery:
                 return R.string.menu_gallery;
-            case R.id.nav_tools:
-                return R.string.menu_tools;
+            case R.id.nav_profile:
+                return R.string.menu_profile;
             //case R.id.nav_share:
             case R.id.nav_log_reg:
                 if (user == null) {
@@ -216,8 +216,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_gallery:
                 fragment = HomeContentFragment.newInstance(titleId);
                 break;
-            case R.id.nav_tools:
-                fragment = HomeContentFragment_KK.newInstance(titleId);
+            case R.id.nav_profile:
+                fragment = ProfileFragment.newInstance(titleId);
                 break;
             //case R.id.nav_share:
             case R.id.nav_log_reg:
@@ -227,8 +227,10 @@ public class MainActivity extends AppCompatActivity
                     loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
 
                     fragment = LoginFragment.newInstance(titleId);
-                    //auth.signOut();
+                    //fragment = LoginFragment.newInstance(R.string.menu_login_register);
+                    auth.signOut();
                     FirebaseAuth.getInstance().signOut();
+                    setUser(null);
                 }else{
                     fragment = LoginFragment.newInstance(titleId);
                 }
@@ -303,9 +305,10 @@ public class MainActivity extends AppCompatActivity
             loginMenuItem.setIcon(R.drawable.login);
         } else {
             loginMenuItem.setTitle(R.string.menu_logout);
-            loginMenuItem.setIcon(R.drawable.login);
+            loginMenuItem.setIcon(R.drawable.logout);
 
-            fragment = HomeContentFragment.newInstance(R.string.app_name);
+            //onNavigationItemSelected(loginMenuItem);
+            fragment = HomeContentFragment.newInstance(R.string.menu_camera);
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -319,7 +322,10 @@ public class MainActivity extends AppCompatActivity
     }
     public void setUser(FirebaseUser user) {
         this.user = user;
-        updateLoginMenuItem();  // Update the menu items
+        //updateLoginMenuItem();  // Update the menu items
+    }
+    public FirebaseUser getUser() {
+        return this.user;
     }
 
 }
