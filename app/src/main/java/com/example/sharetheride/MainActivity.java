@@ -224,9 +224,10 @@ public class MainActivity extends AppCompatActivity
                 if (menuItem.toString().contentEquals(getString(R.string.menu_logout))){
 
                     loginMenuItem.setTitle(R.string.menu_login_register);
-                    loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
+                    loginMenuItem.setIcon(R.drawable.login);  // Set the icon accordingly
 
-                    fragment = LoginFragment.newInstance(titleId);
+                    fragment = LoginFragment.newInstance(R.string.menu_login_register);
+                    titleId = R.string.menu_login_register;
                     //fragment = LoginFragment.newInstance(R.string.menu_login_register);
                     auth.signOut();
                     FirebaseAuth.getInstance().signOut();
@@ -296,6 +297,8 @@ public class MainActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
         MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
 
+        //loginMenuItem = navigationView.getMenu().getItem(2); //User 0 for people to go to profile page
+        //onNavigationItemSelected(menuItem);
         // Check login status (this could be from SharedPreferences, a ViewModel, etc.)
         //SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
         //boolean isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false);
@@ -304,11 +307,11 @@ public class MainActivity extends AppCompatActivity
             loginMenuItem.setTitle(R.string.menu_login);
             loginMenuItem.setIcon(R.drawable.login);
         } else {
-            loginMenuItem.setTitle(R.string.menu_logout);
+            loginMenuItem.setTitle(R.string.menu_logout); //Text on menu
             loginMenuItem.setIcon(R.drawable.logout);
 
             //onNavigationItemSelected(loginMenuItem);
-            fragment = HomeContentFragment.newInstance(R.string.menu_camera);
+            fragment = ProfileFragment.newInstance(R.string.menu_profile); //Text inside the fragment
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -316,7 +319,10 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.home_content, fragment)
                     .commit();
 
-            setTitle(getString(R.string.app_name));
+            loginMenuItem = navigationView.getMenu().getItem(2); //Use 2 for people to go to profile page
+            loginMenuItem.setChecked(true);
+            setTitle(getString(R.string.menu_profile)); //Set title on top of fragment
+
             //fragment = LoginFragment.newInstance(titleId);
         }
     }
