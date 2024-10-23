@@ -24,6 +24,12 @@
     <string name="click_to_register">Click to Register</string>
     <string name="click_to_reset">Click to Reset Password</string>
     <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="car_size">Car size</string>
+    <string name="car_plate">Car plate</string>
+    <string name="phone_number">Phone number</string>
+    <string name="update">Update</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
