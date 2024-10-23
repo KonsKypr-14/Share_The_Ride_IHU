@@ -14,24 +14,24 @@ import androidx.fragment.app.Fragment;
 
 public class HomeContentFragment_KK extends Fragment {
 
-  private static final String TEXT_ID = "text_id";
+    private static final String TEXT_ID = "text_id";
 
-  public static HomeContentFragment_KK newInstance(@StringRes int textId) {
-    HomeContentFragment_KK frag = new HomeContentFragment_KK();
+    public static HomeContentFragment_KK newInstance(@StringRes int textId) {
+        HomeContentFragment_KK frag = new HomeContentFragment_KK();
 
-    Bundle args = new Bundle();
-    args.putInt(TEXT_ID, textId);
-    frag.setArguments(args);
+        Bundle args = new Bundle();
+        args.putInt(TEXT_ID, textId);
+        frag.setArguments(args);
 
-    return frag;
-  }
+        return frag;
+    }
 
-  Button button_test;
+    Button button_test;
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-  Bundle savedInstanceState) {
-    View layout = inflater.inflate(R.layout.home_fragment_kk, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+    Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.home_fragment_kk, container, false);
 /*
     if (getArguments() != null) {
       String text = getString(getArguments().getInt(TEXT_ID));
@@ -52,20 +52,20 @@ public class HomeContentFragment_KK extends Fragment {
 */
 
 
-    // Find the button in the fragment layout
-    Button myButton = layout.findViewById(R.id.button_test);
+        // Find the button in the fragment layout
+        Button myButton = layout.findViewById(R.id.button_test);
 
-    // Set an OnClickListener for the button
-    myButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // Handle the button click
-        Toast.makeText(getActivity(), "Button Clicked!", Toast.LENGTH_SHORT).show();
-      }
-    });
+        // Set an OnClickListener for the button
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle the button click
+                Toast.makeText(getActivity(), "Button Clicked!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    return layout;
+        return layout;
 
-  }
+    }
 }
 

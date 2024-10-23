@@ -38,7 +38,7 @@ public class Register extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
@@ -80,34 +80,34 @@ public class Register extends AppCompatActivity {
                 password = editText_password.getText().toString();
                 password_re = editText_password_re.getText().toString();
 
-                if (TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     Toast.makeText(Register.this, "Enter email", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
-                if (password.length() < 6){
+                if (password.length() < 6) {
                     Toast.makeText(Register.this, "Password should be 6 or more characters", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
-                if (TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(Register.this, "Enter password", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
-                if (TextUtils.isEmpty(password_re)){
+                if (TextUtils.isEmpty(password_re)) {
                     Toast.makeText(Register.this, "Enter password", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
-                if (!password.equals(password_re)){
+                if (!password.equals(password_re)) {
                     Toast.makeText(Register.this, "Passwords doesn't match", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
 
                 mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
@@ -116,7 +116,7 @@ public class Register extends AppCompatActivity {
                                     //Log.d(TAG, "createUserWithEmail:success");
                                     //FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(Register.this, "Account created.", Toast.LENGTH_SHORT).show();
-                                    Map<String , Object> map_business = new HashMap<>();
+                                    Map<String, Object> map_business = new HashMap<>();
 
                                     map_business.put("car_model", "");
                                     map_business.put("car_size", "");

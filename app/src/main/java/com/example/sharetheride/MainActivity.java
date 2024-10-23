@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity
         //auth.signOut();
 
 
-
-
         setContentView(R.layout.activity_home);
         setupToolbar();
         setupDrawer();
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
 
         // Update the title based on login status
-        if (user == null){
+        if (user == null) {
             // User is not logged in, set to "Login/Register"
             loginMenuItem.setTitle(R.string.menu_login_register);
             loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_log_reg:
                 if (user == null) {
                     return R.string.menu_login_register;
-                }else {
+                } else {
                     return R.string.menu_logout;
                 }
             case R.id.nav_send:
@@ -221,7 +219,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             //case R.id.nav_share:
             case R.id.nav_log_reg:
-                if (menuItem.toString().contentEquals(getString(R.string.menu_logout))){
+                if (menuItem.toString().contentEquals(getString(R.string.menu_logout))) {
 
                     loginMenuItem.setTitle(R.string.menu_login_register);
                     loginMenuItem.setIcon(R.drawable.login);  // Set the icon accordingly
@@ -232,7 +230,7 @@ public class MainActivity extends AppCompatActivity
                     auth.signOut();
                     FirebaseAuth.getInstance().signOut();
                     setUser(null);
-                }else{
+                } else {
                     fragment = LoginFragment.newInstance(titleId);
                 }
                 break;
@@ -326,10 +324,12 @@ public class MainActivity extends AppCompatActivity
             //fragment = LoginFragment.newInstance(titleId);
         }
     }
+
     public void setUser(FirebaseUser user) {
         this.user = user;
         //updateLoginMenuItem();  // Update the menu items
     }
+
     public FirebaseUser getUser() {
         return this.user;
     }
