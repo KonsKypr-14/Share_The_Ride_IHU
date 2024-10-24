@@ -32,9 +32,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,8 +67,12 @@ public class ProfileFragment extends Fragment {
     ProgressBar progressBar;
     TextView textView_register, textView_reset;
     FirebaseFirestore db;
+    FirebaseFirestore db1;
 
     private NavigationView navigationView;
+
+
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -80,9 +87,12 @@ public class ProfileFragment extends Fragment {
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("users_collection");
+
         //By using the below method we take the current status of the user.
         //What we need is to display the login in case the user is null
         user = ((MainActivity) getActivity()).getUser();  // Pass the logged-in user
+        db1 = ((MainActivity) getActivity()).getDb();  // Pass the logged-in user
 
         email_input = layout.findViewById(R.id.email);
         email_input.setText(user.getEmail());
@@ -96,15 +106,92 @@ public class ProfileFragment extends Fragment {
         //Use the list to be more dynamic the logic. In case of new fields in DB we just add the field into the mapper.
         List<FieldMapper> fieldMappers = new ArrayList<>();
 
+        //List<FieldMapper_DataSnapshot> fieldMapper_data = new ArrayList<>();
+
         fieldMappers.add(new FieldMapper(name_input, "name"));
         fieldMappers.add(new FieldMapper(surname_input, "surname"));
-        fieldMappers.add(new FieldMapper(car_plate_input, "name"));
+        fieldMappers.add(new FieldMapper(car_plate_input, "vehicle_plate"));
         fieldMappers.add(new FieldMapper(car_size_input, "car_size"));
         fieldMappers.add(new FieldMapper(email_input, "email"));
         fieldMappers.add(new FieldMapper(phone_number_input, "phone_number"));
 
-        db.collection("users_collection").document(user.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+/*
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(name_input, "name"));
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(surname_input, "surname"));
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(car_plate_input, "car_plate"));
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(car_size_input, "car_size"));
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(email_input, "email"));
+        fieldMapper_data.add(new FieldMapper_DataSnapshot(phone_number_input, "phone_number"));
+
+        List<TextInputEditText> uiElements = Arrays.asList(name_input, surname_input, car_plate_input, car_size_input, email_input, phone_number_input);
+        List<String> fieldNames = Arrays.asList("name", "surname", "car_plate", "car_size", "email", "phone_number");
+
+
+// Dynamically create the fieldMappers list
+        //List<FieldMapper> fieldMappers1 = FieldMapper_DataSnapshot.createFieldMappers(uiElements, fieldNames);
+ */
+/*
+// Fetching data from Firebase Realtime Database
+        //DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users_collection").child(user.getUid());
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users_collection");
+        //.child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        mDatabase.child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataSnapshot ds_data = task.getResult();
+
+                    phone_number_input.setText(ds_data.child("phone_number").getValue().toString());
+                }
+            }
+        });
+
+        dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataSnapshot dataSnapshot = task.getResult();
+
+                    car_plate_input.setText(String.valueOf(dataSnapshot.child("name").getValue()));
+                    phone_number_input.setText(String.valueOf(dataSnapshot.child("phone_number").getValue()));
+
+                    //for (FieldMapper fieldMapper : fieldMappers) {
+                    //    //fieldMapper.setTextFromDocument(dataSnapshot);
+                    //}
+                } else {
+                    // Handle the error
+                }
+            }
+        });
+
+
+        db.collection("users_collection").document(user.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // Handle the error
+                    return;
+                }
+
+                if (value != null && value.exists()) {
+
+                    String phoneNumber = value.getString("phone_number");
+
+                    phone_number_input.setText(phoneNumber);
+                    //email_input.setText(value.getString("phone_number"));
+                    // To avoid the write of each field, I create the class to be more dynamic
+                    //for (FieldMapper fieldMapper : fieldMappers) {
+                    //    fieldMapper.setTextFromDocument(value);
+                    //}
+                    // Other operations can be performed here, as the data has been updated in real-time
+                }
+            }
+        });
+
+
+
+
+        db.collection("users_collection").document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
@@ -113,12 +200,85 @@ public class ProfileFragment extends Fragment {
                             for (FieldMapper fieldMapper : fieldMappers) {
                                 fieldMapper.setTextFromDocument(documentSnapshot);
                             }
+                        }
+                    }
+                });*/
+
+        db.collection("users_collection").document(user.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // Handle the error
+                    return;
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    //To avoid the write of each field, I create the class to be more dynamic
+                    for (FieldMapper fieldMapper : fieldMappers) {
+                        fieldMapper.setTextFromDocument(documentSnapshot);
+                    }
+                    //name_input.setText(documentSnapshot.getString("name"));
+                    //surname_input.setText(documentSnapshot.getString("surname"));
+                    //etc...
+                }
+            }
+        });
+
+
+
+
+/*
+        db.collection("users_collection").document(user.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+
+                            //car_plate_input.setText(documentSnapshot.getString("name"));
+                            phone_number_input.setText(documentSnapshot.getString("phone_number"));
+
+                            //To avoid the write of each field, I create the class to be more dynamic
+                            //for (FieldMapper fieldMapper : fieldMappers) {
+                            //    fieldMapper.setTextFromDocument(documentSnapshot);
+                            //}
+
+
+
+
                             //name_input.setText(documentSnapshot.getString("name"));
                             //surname_input.setText(documentSnapshot.getString("surname"));
                             //etc...
                         }
                     }
-                });
+                });  */
+
+        /*
+        mDatabase.child("users_collection").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    //Log.e("firebase", "Error getting data", task.getException());
+                } else {
+
+                    DataSnapshot dataSnapshot = task.getResult();
+
+                    car_plate_input.setText(dataSnapshot.child("phone_number").getValue(String.class));
+
+                    //for (FieldMapper_DataSnapshot fieldMapper_data : fieldMapper_data) {
+                    //    fieldMapper_data.setTextFromDataSnapshot(dataSnapshot);
+                    //}
+
+                    //DataSnapshot dataSnapshot = task.getResult();
+                    //for (FieldMapper fieldMapper : fieldMappers) {
+                    //    //fieldMapper.setTextFromDocument(dataSnapshot);
+                    //}
+                    //Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                }
+            }
+        });
+
+         */
 
 
         //if ( user != null ) {
@@ -206,7 +366,7 @@ public class ProfileFragment extends Fragment {
                     map_business.put("car_size", "");
                     map_business.put("email", email_input.getText().toString());
                     map_business.put("name", name_input.getText().toString());
-                    map_business.put("phone_number ", phone_number_input.getText().toString());
+                    map_business.put("phone_number", phone_number_input.getText().toString());
                     map_business.put("role", "");
                     map_business.put("surname", surname_input.getText().toString());
                     map_business.put("vehicle_plate", car_plate_input.getText().toString());

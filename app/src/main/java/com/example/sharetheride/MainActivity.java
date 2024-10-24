@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseAuth auth;
     FirebaseUser user;
 
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,9 @@ public class MainActivity extends AppCompatActivity
         email_text_input = findViewById(R.id.user_email);
          */
         //auth.signOut();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        String test;
 
         //if (user == null){
         //    Intent intent = new Intent(getApplicationContext(), Login.class);
@@ -332,6 +335,9 @@ public class MainActivity extends AppCompatActivity
 
     public FirebaseUser getUser() {
         return this.user;
+    }
+    public FirebaseFirestore getDb() {
+        return this.db;
     }
 
 }

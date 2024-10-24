@@ -163,10 +163,10 @@ public class RegisterFragment extends Fragment {
                                     map_business.put("car_size", "");
                                     map_business.put("email", editText_email.getText().toString());
                                     map_business.put("name", "");
-                                    map_business.put("phone_number ", "");
+                                    map_business.put("phone_number", "");
                                     map_business.put("role", "");
                                     map_business.put("surname", "");
-                                    map_business.put("vechicle_plate", "");
+                                    map_business.put("vehicle_plate", "");
                                     db.collection("users_collection").document(mAuth.getUid())
                                             .set(map_business, SetOptions.merge())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
