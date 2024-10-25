@@ -29,8 +29,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import com.google.firebase.firestore.GeoPoint;
 
 public class RegisterFragment extends Fragment {
 
@@ -157,18 +161,89 @@ public class RegisterFragment extends Fragment {
                                     //Log.d(TAG, "createUserWithEmail:success");
                                     //FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(getActivity(), "Account created.", Toast.LENGTH_SHORT).show();
-                                    Map<String, Object> map_business = new HashMap<>();
 
-                                    map_business.put("car_model", "");
-                                    map_business.put("car_size", "");
-                                    map_business.put("email", editText_email.getText().toString());
-                                    map_business.put("name", "");
-                                    map_business.put("phone_number", "");
-                                    map_business.put("role", "");
-                                    map_business.put("surname", "");
-                                    map_business.put("vehicle_plate", "");
+                                    //User Map for DB
+                                    Map<String, Object> map_user = new HashMap<>();
+
+                                    map_user.put("car_model", "");
+                                    map_user.put("car_size", "");
+                                    map_user.put("email", editText_email.getText().toString());
+                                    map_user.put("name", "");
+                                    map_user.put("phone_number", "");
+                                    map_user.put("role", "");
+                                    map_user.put("surname", "");
+                                    map_user.put("vehicle_plate", "");
+
+                                    //Trip Map for DB
+                                    Map<String, Object> map_trip = new HashMap<>();
+
+                                    map_trip.put("trip_id", "");
+                                    map_trip.put("organizer_id", "");
+                                    map_trip.put("organizer_name", "");
+                                    map_trip.put("vehicle_plate", "");
+                                    map_trip.put("car_model", "");
+                                    map_trip.put("start_location", ""); // Assuming GeoPoint is used for coordinates
+                                    map_trip.put("end_location", "");
+
+                                    // Define pickup points
+                                    List<Map<String, Object>> pickupPoints = new ArrayList<>();
+                                    Map<String, Object> point1 = new HashMap<>();
+
+                                    point1.put("location", new GeoPoint(40.7168, -74.0059));
+                                    point1.put("label", "City Center");
+                                    pickupPoints.add(point1);
+
+                                    Map<String, Object> point2 = new HashMap<>();
+
+                                    point2.put("location", new GeoPoint(40.7128, -74.0060)); //This should be dynamic
+                                    point2.put("label", "East Side Park");
+                                    pickupPoints.add(point2);
+
+                                    map_trip.put("pickup_points", pickupPoints); // Array of locations
+                                    map_trip.put("start_time", "");
+                                    map_trip.put("end_time", "");
+                                    map_trip.put("max_passengers", "");
+                                    map_trip.put("current_passengers", "");
+
+                                    List<Map<String, Object>> passenger_list = new ArrayList<>();
+                                    Map<String, Object> passenger1 = new HashMap<>();
+                                    Map<String, Object> passenger2 = new HashMap<>();
+                                    Map<String, Object> passenger3 = new HashMap<>();
+                                    Map<String, Object> passenger4 = new HashMap<>();
+
+                                    passenger1.put("passenger_id", "id1");
+                                    passenger1.put("name", "Alice Smith");
+                                    passenger1.put("pickup_confirmed", true);
+                                    passenger1.put("available", true);
+                                    passenger_list.add(passenger1);
+
+                                    passenger2.put("passenger_id", "id2");
+                                    passenger2.put("name", "Alice Smith");
+                                    passenger2.put("pickup_confirmed", true);
+                                    passenger2.put("available", true);
+                                    passenger_list.add(passenger2);
+
+                                    passenger3.put("passenger_id", "id3");
+                                    passenger3.put("name", "Alice Smith");
+                                    passenger3.put("pickup_confirmed", true);
+                                    passenger3.put("available", true);
+                                    passenger_list.add(passenger3);
+
+                                    passenger4.put("passenger_id", "id4");
+                                    passenger4.put("name", "Alice Smith");
+                                    passenger4.put("pickup_confirmed", true);
+                                    passenger4.put("available", true);
+                                    passenger_list.add(passenger4);
+
+                                    map_trip.put("passengers", passenger_list); // Array of passenger details
+                                    map_trip.put("trip_status", "");
+                                    map_trip.put("price_per_seat", "");
+                                    map_trip.put("rating", "");
+                                    map_trip.put("created_at", new Date()); // Current date/time for created_at
+                                    map_trip.put("updated_at", new Date()); // Current date/time for updated_at
+
                                     db.collection("users_collection").document(mAuth.getUid())
-                                            .set(map_business, SetOptions.merge())
+                                            .set(map_user, SetOptions.merge())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -183,11 +258,23 @@ public class RegisterFragment extends Fragment {
                                                     Toast.makeText(getActivity(), "Error writing document.", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-                      /*
-                      Intent intent = new Intent(getApplicationContext(), Login.class);
-                      startActivity(intent);
-                      finish();
-                       */
+
+                                    db.collection("trips").document(mAuth.getUid())
+                                            .set(map_trip, SetOptions.merge())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                    Toast.makeText(getActivity(), "Account created.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    //Log.w(TAG, "Error writing document", e);
+                                                    Toast.makeText(getActivity(), "Error writing document.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
 
                                     Fragment loginFragment = LoginFragment.newInstance(R.string.click_to_login);
                                     // Get the FragmentManager to perform the transaction

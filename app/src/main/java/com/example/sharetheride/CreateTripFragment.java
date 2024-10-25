@@ -2,57 +2,42 @@ package com.example.sharetheride;
 
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class ProfileFragment extends Fragment {
+public class CreateTripFragment extends Fragment {
 
     private static final String TEXT_ID = "text_id";
 
-    public static ProfileFragment newInstance(@StringRes int textId) {
-        ProfileFragment frag = new ProfileFragment();
+    public static CreateTripFragment newInstance(@StringRes int textId) {
+        CreateTripFragment frag = new CreateTripFragment();
 
         Bundle args = new Bundle();
         args.putInt(TEXT_ID, textId);
@@ -62,7 +47,7 @@ public class ProfileFragment extends Fragment {
     }
 
     TextInputEditText email_input, name_input, surname_input, car_size_input, car_plate_input, phone_number_input;
-    Button buttonUpdate, buttonReg, buttonLog;
+    Button buttonUpdate;
     FirebaseAuth mAuth;
     FirebaseUser user;
     ProgressBar progressBar;
@@ -72,13 +57,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
     Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.activity_profile, container, false);
+        View layout = inflater.inflate(R.layout.create_trip, container, false);
 
         layout_profile = layout.findViewById(R.id.linear_profile);
         layout_log_reg = layout.findViewById(R.id.linear_log_reg);
-
-        buttonReg = layout.findViewById(R.id.button_register);
-        buttonLog = layout.findViewById(R.id.button_login);
 
         //By using the below method we take the current status of the user.
         //What we need is to display the login in case the user is null
@@ -90,52 +72,6 @@ public class ProfileFragment extends Fragment {
             layout_profile.setVisibility(View.GONE);
             layout_log_reg.setVisibility(View.VISIBLE);
         }
-
-
-        buttonReg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Fragment registerFragment = RegisterFragment.newInstance(R.string.click_to_register);
-                // Get the FragmentManager to perform the transaction
-                FragmentManager fragmentManager = getParentFragmentManager();
-
-                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                // Optionally set animations for fragment transition
-                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
-                // Replace the current fragment with RegisterFragment
-                fragmentTransaction.replace(R.id.home_content, registerFragment);
-                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
-                fragmentTransaction.addToBackStack(null);
-                // Commit the transaction
-                fragmentTransaction.commit();
-
-            }
-        });
-
-        buttonLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Intent intent = new Intent(getApplicationContext(), Login.class);
-                //startActivity(intent);
-                //finish();
-
-                Fragment loginFragment = LoginFragment.newInstance(R.string.click_to_login);
-                // Get the FragmentManager to perform the transaction
-                FragmentManager fragmentManager = getParentFragmentManager();
-                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                // Optionally set animations for fragment transition
-                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
-                // Replace the current fragment with RegisterFragment
-                fragmentTransaction.replace(R.id.home_content, loginFragment);
-                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
-                fragmentTransaction.addToBackStack(null);
-                // Commit the transaction
-                fragmentTransaction.commit();
-            }
-        });
 
         buttonUpdate = layout.findViewById(R.id.update_btn);
         progressBar = layout.findViewById(R.id.progressbar);
