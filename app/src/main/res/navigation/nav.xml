@@ -8,9 +8,9 @@
 
     <fragment
         android:id="@+id/nav_trips"
-        android:name="com.example.sharetheride.HomeContentFragment"
+        android:name="com.example.sharetheride.DisplayTipsFragment"
         android:label="@string/menu_trips"
-        tools:layout="@layout/home_fragment">
+        tools:layout="@layout/item_trip">
         <argument
             android:name="text_id"
             android:defaultValue="@string/menu_trips"
@@ -19,9 +19,21 @@
 
     <fragment
         android:id="@+id/nav_create_trip"
-        android:name="com.example.sharetheride.HomeContentFragment"
+        android:name="com.example.sharetheride.CreateTripFragment"
         android:label="@string/menu_create_trip"
-        tools:layout="@layout/home_fragment">
+        tools:layout="@layout/fragment_create_trip">
+        <argument
+            android:name="text_id"
+            android:defaultValue="@string/menu_gallery"
+            app:argType="reference" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_menu_show_my_trips"
+        android:name="com.example.sharetheride.MyTripsFragment"
+        android:label="@string/menu_show_my_trips"
+        tools:layout="@layout/my_trips">
         <argument
             android:name="text_id"
             android:defaultValue="@string/menu_gallery"
@@ -30,8 +42,9 @@
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.sharetheride.HomeContentFragment_KK"
-        android:label="@string/menu_profile">
+        android:name="com.example.sharetheride.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/activity_profile">
         <argument
             android:name="text_id"
             android:defaultValue="@string/menu_profile"
@@ -40,9 +53,9 @@
 
     <fragment
         android:id="@+id/nav_log_reg"
-        android:name="com.example.sharetheride.HomeContentFragment"
+        android:name="com.example.sharetheride.LoginFragment"
         android:label="@string/menu_share"
-        tools:layout="@layout/home_fragment">
+        tools:layout="@layout/activity_login">
         <argument
             android:name="text_id"
             android:defaultValue="@string/menu_share"

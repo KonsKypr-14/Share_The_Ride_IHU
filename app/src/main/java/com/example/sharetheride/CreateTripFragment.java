@@ -14,6 +14,7 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -31,6 +32,7 @@ public class CreateTripFragment extends Fragment {
     private Button createTripButton;
 
     private FirebaseFirestore db;
+    FirebaseUser user;
 
     public CreateTripFragment() {
         // Required empty public constructor
@@ -53,6 +55,8 @@ public class CreateTripFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_trip, container, false);
+
+        user = ((MainActivity) getActivity()).getUser();  // Pass the logged-in user
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
@@ -92,24 +96,24 @@ public class CreateTripFragment extends Fragment {
         String vehiclePlate = vehiclePlateInput.getText().toString().trim();
         String carModel = carModelInput.getText().toString().trim();
 
-        double startLat = Double.parseDouble(startLocationLatInput.getText().toString().trim());
-        double startLng = Double.parseDouble(startLocationLngInput.getText().toString().trim());
-        GeoPoint startLocation = new GeoPoint(startLat, startLng);
+        String startLat = startLocationLatInput.getText().toString().trim();
+        //String startLng = startLocationLngInput.getText().toString().trim();
+        String startLocation = startLat;
 
-        double endLat = Double.parseDouble(endLocationLatInput.getText().toString().trim());
-        double endLng = Double.parseDouble(endLocationLngInput.getText().toString().trim());
-        GeoPoint endLocation = new GeoPoint(endLat, endLng);
+        String endLat = endLocationLatInput.getText().toString().trim();
+        //String endLng = endLocationLngInput.getText().toString().trim();
+        String endLocation = endLat;
 
-        int maxPassengers = Integer.parseInt(maxPassengersInput.getText().toString().trim());
-        int currentPassengers = Integer.parseInt(currentPassengersInput.getText().toString().trim());
+        String maxPassengers = maxPassengersInput.getText().toString().trim();
+        String currentPassengers = currentPassengersInput.getText().toString().trim();
         String tripStatus = tripStatusInput.getText().toString().trim();
-        double pricePerSeat = Double.parseDouble(pricePerSeatInput.getText().toString().trim());
-        double rating = Double.parseDouble(ratingInput.getText().toString().trim());
+        String pricePerSeat = pricePerSeatInput.getText().toString().trim();
+        String rating = ratingInput.getText().toString().trim();
 
         // Create trip map
         Map<String, Object> mapTrip = new HashMap<>();
         mapTrip.put("trip_id", tripId);
-        mapTrip.put("organizer_id", organizerId);
+        mapTrip.put("organizer_id", user.getUid().toString());
         mapTrip.put("organizer_name", organizerName);
         mapTrip.put("vehicle_plate", vehiclePlate);
         mapTrip.put("car_model", carModel);

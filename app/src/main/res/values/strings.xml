@@ -6,6 +6,7 @@
     <string name="title_click">Title Click</string>
     <string name="menu_trips">Trip list</string>
     <string name="menu_create_trip">Create a trip</string>
+    <string name="menu_show_my_trips">Show my trips</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_login">Login</string>

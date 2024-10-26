@@ -1,15 +1,9 @@
 package com.example.sharetheride;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,18 +16,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-
-import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -106,10 +92,16 @@ public class MainActivity extends AppCompatActivity
             // User is not logged in, set to "Login/Register"
             loginMenuItem.setTitle(R.string.menu_login_register);
             loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
+
+            //navigationView.getMenu().findItem(R.id.group_profile).setVisible(false);
+            navigationView.getMenu().setGroupVisible(R.id.group_profile, true);
         } else {
             // User is logged in, set to "Logout"
             loginMenuItem.setTitle(R.string.menu_logout);
             loginMenuItem.setIcon(R.drawable.logout);  // Update the icon if needed
+
+            //navigationView.getMenu().findItem(R.id.group_profile).setVisible(true);
+            navigationView.getMenu().setGroupVisible(R.id.group_profile, true);
         }
     }
 
@@ -143,6 +135,15 @@ public class MainActivity extends AppCompatActivity
     private void setupNavigationView() {
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // Access the Menu and hide the specific item
+        //if (user == null) {
+        //    navigationView.getMenu().findItem(R.id.group_profile).setVisible(false);
+        //    //navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+        //    //navigationView.getMenu().setGroupVisible(R.id.group_profile, false);
+        //} else {
+        //    navigationView.getMenu().findItem(R.id.group_profile).setVisible(true);
+        //    //navigationView.getMenu().setGroupVisible(R.id.group_profile, true);
+        //}
         setDefaultMenuItem();
         setupHeader();
     }
@@ -195,6 +196,8 @@ public class MainActivity extends AppCompatActivity
                 }
             case R.id.nav_send:
                 return R.string.menu_send;
+            case R.id.nav_menu_show_my_trips:
+                return R.string.menu_show_my_trips;
             default:
                 throw new IllegalArgumentException("menu option not implemented!!");
         }
@@ -224,6 +227,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_log_reg:
                 if (menuItem.toString().contentEquals(getString(R.string.menu_logout))) {
 
+                    //navigationView.getMenu().findItem(R.id.group_profile).setVisible(false);
+                    navigationView.getMenu().setGroupVisible(R.id.group_profile, false);
                     loginMenuItem.setTitle(R.string.menu_login_register);
                     loginMenuItem.setIcon(R.drawable.login);  // Set the icon accordingly
 
@@ -239,6 +244,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_send:
                 fragment = HomeContentFragment.newInstance(titleId);
+                break;
+            case R.id.nav_menu_show_my_trips:
+                fragment = MyTripsFragment.newInstance(titleId);
                 break;
         }
 
@@ -307,7 +315,13 @@ public class MainActivity extends AppCompatActivity
         if (user == null) {
             loginMenuItem.setTitle(R.string.menu_login);
             loginMenuItem.setIcon(R.drawable.login);
+
+            //navigationView.getMenu().findItem(R.id.group_profile).setVisible(false);
+            navigationView.getMenu().setGroupVisible(R.id.group_profile, false);
         } else {
+            //navigationView.getMenu().findItem(R.id.group_profile).setVisible(true);
+            navigationView.getMenu().setGroupVisible(R.id.group_profile, true);
+
             loginMenuItem.setTitle(R.string.menu_logout); //Text on menu
             loginMenuItem.setIcon(R.drawable.logout);
 
@@ -320,7 +334,7 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.home_content, fragment)
                     .commit();
 
-            loginMenuItem = navigationView.getMenu().getItem(2); //Use 2 for people to go to profile page
+            loginMenuItem = navigationView.getMenu().getItem(1); //Use 1 for people to go to profile page
             loginMenuItem.setChecked(true);
             setTitle(getString(R.string.menu_profile)); //Set title on top of fragment
 
@@ -338,6 +352,10 @@ public class MainActivity extends AppCompatActivity
     }
     public FirebaseFirestore getDb() {
         return this.db;
+    }
+
+    public NavigationView getMenu() {
+        return this.navigationView;
     }
 
 }

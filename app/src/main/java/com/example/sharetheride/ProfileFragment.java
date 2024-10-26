@@ -4,6 +4,8 @@ package com.example.sharetheride;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,10 +71,19 @@ public class ProfileFragment extends Fragment {
     FirebaseFirestore db;
     LinearLayout layout_profile, layout_log_reg;
 
+    private NavigationView navigationView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
     Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.activity_profile, container, false);
+
+        //navigationView = ((MainActivity) getActivity()).getMenu();  // Pass the logged-in user
+
+        //Menu menu = navigationView.getMenu();
+        //MenuItem loginMenuItem = menu.findItem(R.id.nav_log_reg);
+
+        //navigationView.getMenu().findItem(R.id.group_profile).setVisible(true);
 
         layout_profile = layout.findViewById(R.id.linear_profile);
         layout_log_reg = layout.findViewById(R.id.linear_log_reg);

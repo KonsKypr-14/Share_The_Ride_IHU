@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+xmlns:tools="http://schemas.android.com/tools"
+tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_trips"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_trips" />
-        <item
-            android:id="@+id/nav_create_trip"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_create_trip" />
-    </group>
+<group
+    android:id="@+id/group1"
+    android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_trips"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="@string/menu_trips" />
+</group>
 
-    <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/account"
-            android:title="@string/menu_profile" />
-    </group>
+<group
+    android:id="@+id/group2"
+    android:checkableBehavior="single">
+    <!-- Add items if needed -->
+</group>
 
-    <item android:title="@string/menu_group_login">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_log_reg"
-                    android:icon="@drawable/login"
-                    android:title="@string/menu_login_register" />
-            </group>
-        </menu>
-    </item>
+<!-- Flattened items from group_profile -->
+<group
+    android:id="@+id/group_profile"
+    android:checkableBehavior="single"
+    android:visible="false"> <!-- Initially hidden if needed -->
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/account"
+        android:title="@string/menu_profile" />
+
+    <item
+        android:id="@+id/nav_create_trip"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="@string/menu_create_trip" />
+
+    <item
+        android:id="@+id/nav_menu_show_my_trips"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="@string/menu_show_my_trips" />
+</group>
+
+<group
+    android:id="@+id/group4"
+    android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_log_reg"
+        android:icon="@drawable/login"
+        android:title="@string/menu_login_register" />
+</group>
 </menu>
+
