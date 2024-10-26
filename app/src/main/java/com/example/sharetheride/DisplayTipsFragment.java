@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,19 @@ public class DisplayTipsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private static final String TEXT_ID = "text_id";
+
+    public static DisplayTipsFragment newInstance(@StringRes int textId) {
+
+        DisplayTipsFragment frag = new DisplayTipsFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(TEXT_ID, textId);
+        frag.setArguments(args);
+
+        return frag;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_display_tips, container, false);
@@ -44,7 +58,7 @@ public class DisplayTipsFragment extends Fragment {
 
     private void loadTripsFromDB() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("trips_collection") // Change to the correct collection name
+        db.collection("trips") // Change to the correct collection name
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     tripList.clear();
@@ -56,7 +70,7 @@ public class DisplayTipsFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors here
-                    //Log.e("DisplayTipsFragment", "Error fetching data", e);
+                    Log.e("DisplayTipsFragment", "Error fetching data", e);
                 });
     }
 }

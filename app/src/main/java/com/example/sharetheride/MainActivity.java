@@ -180,10 +180,10 @@ public class MainActivity extends AppCompatActivity
 
     private int getTitle(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.nav_camera:
-                return R.string.menu_camera;
-            case R.id.nav_gallery:
-                return R.string.menu_gallery;
+            case R.id.nav_trips:
+                return R.string.menu_trips;
+            case R.id.nav_create_trip:
+                return R.string.menu_create_trip;
             case R.id.nav_profile:
                 return R.string.menu_profile;
             //case R.id.nav_share:
@@ -211,11 +211,11 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = new Fragment();
 
         switch (menuItem.getItemId()) {
-            case R.id.nav_camera:
-                fragment = HomeContentFragment.newInstance(titleId);
+            case R.id.nav_trips:
+                fragment = DisplayTipsFragment.newInstance(titleId);
                 break;
-            case R.id.nav_gallery:
-                fragment = HomeContentFragment.newInstance(titleId);
+            case R.id.nav_create_trip:
+                fragment = CreateTripFragment.newInstance(titleId);
                 break;
             case R.id.nav_profile:
                 fragment = ProfileFragment.newInstance(titleId);
