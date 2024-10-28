@@ -21,6 +21,7 @@ import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,6 +64,7 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000; // or any unique integer
 
     String button_clicked;
+    String latLng_to_send, loc_name_to_send;
 
     private static final String TEXT_ID = "text_id";
 
@@ -82,6 +84,8 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_with_search, container, false);
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -137,6 +141,18 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
                 //Toast.makeText(getActivity(), "Please enter a location", Toast.LENGTH_SHORT).show();
             }
             return true;
+        });
+
+        locationConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Initialize SharedViewModel
+                viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                // Setting data in ViewModel
+                viewModel.setLocation(latLng_to_send);
+                viewModel.setLocationName(loc_name_to_send);
+                fm.popBackStack();
+            }
         });
 
         return rootView;
@@ -248,7 +264,11 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
 
             if (latLng != null) {
                 // Add a marker at the place location
+
+                mMap.clear(); // Remove the markers
                 mMap.addMarker(new MarkerOptions().position(latLng).title(locationName));
+                latLng_to_send = latLng.toString();
+                loc_name_to_send = locationName;
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             }
         }).addOnFailureListener((exception) -> {

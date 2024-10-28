@@ -36,7 +36,7 @@ public class CreateTripFragment extends Fragment  {
     FirebaseUser user;
 
     private SharedViewModel viewModel;
-    String clicked_button;
+    String latLng_retrieved, loc_name_retrived;
 
     //GoogleMap myMap;
     //SearchView mapSearchView;
@@ -107,7 +107,19 @@ public class CreateTripFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_trip, container, false);
-/*
+
+        // Initialize SharedViewModel
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        // Retrieve the button that was clicked on previous Fragment in order to change the texts on the button (to use only 1 layout and not 2)
+        viewModel.getLocation().observe(getViewLifecycleOwner(), locValue -> {
+            latLng_retrieved = locValue;
+        });
+        viewModel.getLocationName().observe(getViewLifecycleOwner(), locNameValue -> {
+            loc_name_retrived = locNameValue;
+        });
+
+        /*
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
 // In your activity or fragment

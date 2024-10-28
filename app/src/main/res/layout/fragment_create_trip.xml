@@ -112,6 +112,7 @@
                 android:padding="16dp"
                 android:text="Click to add your end travel location"
                 android:textAllCaps="false" />
+
         </LinearLayout>
 
         <!--        <EditText-->
