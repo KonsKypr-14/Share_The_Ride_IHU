@@ -8,7 +8,7 @@ tools:showIn="navigation_view">
     android:checkableBehavior="single">
     <item
         android:id="@+id/nav_trips"
-        android:icon="@drawable/ic_menu_gallery"
+        android:icon="@drawable/map_marker_distance"
         android:title="@string/menu_trips" />
 </group>
 
@@ -22,7 +22,7 @@ tools:showIn="navigation_view">
 <group
     android:id="@+id/group_profile"
     android:checkableBehavior="single"
-    android:visible="false"> <!-- Initially hidden if needed -->
+    android:visible="true"> <!-- Initially hidden if needed -->
 
     <item
         android:id="@+id/nav_profile"
@@ -31,12 +31,12 @@ tools:showIn="navigation_view">
 
     <item
         android:id="@+id/nav_create_trip"
-        android:icon="@drawable/ic_menu_gallery"
+        android:icon="@drawable/map_marker_plus"
         android:title="@string/menu_create_trip" />
 
     <item
         android:id="@+id/nav_menu_show_my_trips"
-        android:icon="@drawable/ic_menu_gallery"
+        android:icon="@drawable/map"
         android:title="@string/menu_show_my_trips" />
 </group>
 

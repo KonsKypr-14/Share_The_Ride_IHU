@@ -32,6 +32,10 @@
     <string name="car_plate">Car plate</string>
     <string name="phone_number">Phone number</string>
     <string name="update">Update</string>
+    <string name="search_start">Search your starting location</string>
+    <string name="search_end">Search your arrival location</string>
+    <string name="confirm_start">Confirm your starting location</string>
+    <string name="confirm_end">Confirm your arrival location</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -8,31 +8,41 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class CreateTripFragment extends Fragment {
+public class CreateTripFragment extends Fragment  {
 
     private EditText tripIdInput, organizerIdInput, organizerNameInput, vehiclePlateInput, carModelInput;
     private EditText startLocationLatInput, startLocationLngInput, endLocationLatInput, endLocationLngInput;
     private EditText maxPassengersInput, currentPassengersInput, tripStatusInput, pricePerSeatInput, ratingInput;
-    private Button createTripButton;
+    private Button createTripButton, startLocButton, endLocButton;
 
     private FirebaseFirestore db;
     FirebaseUser user;
+
+    private SharedViewModel viewModel;
+    String clicked_button;
+
+    //GoogleMap myMap;
+    //SearchView mapSearchView;
+    //private FusedLocationProviderClient fusedLocationClient;
+    //private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000; // or any unique integer
+    //private PlacesClient placesClient;
 
     public CreateTripFragment() {
         // Required empty public constructor
@@ -50,11 +60,78 @@ public class CreateTripFragment extends Fragment {
 
         return frag;
     }
+/*
+    // Define an ActivityResultLauncher for Autocomplete
+    private final ActivityResultLauncher<Intent> autocompleteLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    String placeId = place.getId();
+                    String locationName = place.getName();
+                    LatLng latLng = place.getLatLng();
+
+                    // Call your method to handle this place
+                    getCoordinatesAndPlaceMarker(placeId, locationName);
+                } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR) {
+                    //Status status = Autocomplete.getStatus(result.getData());
+                    //Log.e("MapWithSearchFragment", "Error: " + status.getStatusMessage());
+                }
+            }
+    );
+    private void getCoordinatesAndPlaceMarker(String placeId, String locationName) {
+        // Use FetchPlaceRequest.newInstance to create the request
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, Arrays.asList(Place.Field.LAT_LNG));
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            LatLng latLng = place.getLatLng();
+
+            if (latLng != null) {
+                // Add a marker at the place location
+                myMap.addMarker(new MarkerOptions().position(latLng).title(locationName));
+                myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            }
+        }).addOnFailureListener((exception) -> {
+            // Handle the error
+            //Log.e("MapWithSearchFragment", "Place not found: " + exception.getMessage());
+        });
+    }
+
+ */
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_trip, container, false);
+/*
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
+// In your activity or fragment
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+
+        // Initialize Places API
+        Places.initialize(getActivity().getApplicationContext(), "AIzaSyBShreWrfH1g9yIAmcn8DxgHkCUOv0ttCI");
+        placesClient = Places.createClient(getActivity());
+
+
+        // Map setup
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync((OnMapReadyCallback) this);
+        }
+
+ */
 
         user = ((MainActivity) getActivity()).getUser();  // Pass the logged-in user
 
@@ -78,6 +155,15 @@ public class CreateTripFragment extends Fragment {
         ratingInput = view.findViewById(R.id.rating_input);
         createTripButton = view.findViewById(R.id.create_trip_button);
 
+        tripIdInput.setEnabled(false); //Disable the change of the tripId.
+        organizerIdInput.setEnabled(false); //Disable the change of the Organizer ID.
+        organizerNameInput.setEnabled(false); //Disable the change of the Organizer Name/Surname.
+
+        String randomId = generateId(28); // 28 characters
+        tripIdInput.setText(randomId);
+        organizerIdInput.setText(user.getUid().toString());
+        organizerNameInput.setText("Name-Surname");
+
         // Set button click listener
         createTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +172,85 @@ public class CreateTripFragment extends Fragment {
             }
         });
 
+        startLocButton = view.findViewById(R.id.button_loc);
+        endLocButton = view.findViewById(R.id.button_end_loc);
+
+        startLocButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Initialize SharedViewModel
+                viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                // Setting data in ViewModel
+                viewModel.setClickedButton("startLocButton");
+
+                Fragment mapFragment = MapWithSearchFragment.newInstance(R.string.email);
+                // Get the FragmentManager to perform the transaction
+                FragmentManager fragmentManager = getParentFragmentManager();
+                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                // Optionally set animations for fragment transition
+                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
+                // Replace the current fragment with RegisterFragment
+                fragmentTransaction.replace(R.id.home_content, mapFragment);
+                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
+                fragmentTransaction.addToBackStack(null);
+                // Commit the transaction
+                fragmentTransaction.commit();
+            }
+        });
+
+        endLocButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Initialize SharedViewModel
+                viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                // Setting data in ViewModel
+                viewModel.setClickedButton("endLocButton");
+
+                Fragment mapFragment = MapWithSearchFragment.newInstance(R.string.email);
+                // Get the FragmentManager to perform the transaction
+                FragmentManager fragmentManager = getParentFragmentManager();
+                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                // Optionally set animations for fragment transition
+                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
+                // Replace the current fragment with RegisterFragment
+                fragmentTransaction.replace(R.id.home_content, mapFragment);
+                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
+                fragmentTransaction.addToBackStack(null);
+                // Commit the transaction
+                fragmentTransaction.commit();
+            }
+        });
+
+        //View view_map = inflater.inflate(R.layout.activity_map, container, false);
+
+        //mapSearchView = view_map.findViewById(R.id.mapSearch);
+
         return view;
     }
+
+    private static final String ALLOWED_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    public String generateId(int length) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+            sb.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+        }
+
+        return sb.toString();
+    }
+/*
+    private String getClickedButton(){
+        return this.clicked_button;
+    }
+
+ */
 
     private void createTrip() {
         String tripId = tripIdInput.getText().toString().trim();

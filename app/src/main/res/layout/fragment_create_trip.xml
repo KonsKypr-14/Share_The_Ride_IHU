@@ -9,103 +9,361 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <EditText
-            android:id="@+id/trip_id_input"
+        <!--        <EditText-->
+        <!--            android:id="@+id/trip_id_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Trip ID" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Trip ID" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/organizer_id_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/trip_id_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Trip ID" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/organizer_id_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Organizer ID" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Organizer ID" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/organizer_name_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/organizer_id_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Organizer ID" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/organizer_name_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Organizer Name" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Organizer Name" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/vehicle_plate_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/organizer_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Organizer Name" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:gravity="center"-->
+        <!--            android:orientation="vertical">-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/button_start_loc"-->
+        <!--                android:layout_width="250dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="Click to add you travel starting location" />-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/button_end_loc"-->
+        <!--                android:layout_width="250dp"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:text="Click to add your end travel location" />-->
+        <!--        </LinearLayout>-->
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Vehicle Plate" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <EditText
-            android:id="@+id/car_model_input"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_loc"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Click to add your travel starting location"
+                android:textAllCaps="false" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_end_loc"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="16dp"
+                android:text="Click to add your end travel location"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/start_location_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Start Location"-->
+        <!--            android:visibility="gone" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Car Model" />
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/start_location_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/start_location_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Start Location" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/vehicle_plate_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Vehicle Plate" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Start Location" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/end_location_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/vehicle_plate_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Vehicle Plate" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/car_model_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Car Model" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="End Location" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/pickup_points_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/car_model_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Car Model" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/end_location_input"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="End Location"-->
+<!--            android:visibility="gone" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Pickup Points (comma-separated)" />
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/start_time_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/end_location_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="End Location" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/pickup_points_input"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Pickup Points (comma-separated)" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Start Time (Timestamp)" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/end_time_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/pickup_points_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Pickup Points (comma-separated)" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/start_time_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Start Time (Timestamp)" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="End Time (Timestamp)" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/max_passengers_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/start_time_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Start Time (Timestamp)" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/end_time_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="End Time (Timestamp)" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Max Passengers" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/current_passengers_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/end_time_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="End Time (Timestamp)" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/max_passengers_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Max Passengers" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Current Passengers" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/trip_status_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/max_passengers_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Max Passengers" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/current_passengers_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Current Passengers" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Trip Status" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/price_per_seat_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/current_passengers_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Current Passengers" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/trip_status_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Trip Status" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price Per Seat" />
+            android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/rating_input"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/trip_status_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Trip Status" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/price_per_seat_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Price Per Seat" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Rating" />
+            android:layout_marginTop="16dp">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/price_per_seat_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Price Per Seat" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/rating_input"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:hint="Rating" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rating_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Rating" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/create_trip_button"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="Create Trip"-->
+        <!--                    android:layout_gravity="center"-->
+        <!--                    android:layout_marginTop="16dp" />-->
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/create_trip_button"
-            android:layout_width="wrap_content"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
             android:text="Create Trip"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp" />
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </ScrollView>
