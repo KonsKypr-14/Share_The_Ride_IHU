@@ -91,8 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_loc"
@@ -103,6 +102,56 @@
                 android:text="Click to add your travel starting location"
                 android:textAllCaps="false" />
 
+            <RelativeLayout
+                android:id="@+id/pickup_point_input_start_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <!-- TextInputLayout with TextInputEditText -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pickup Point">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/pickup_point_input_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Icon on the right side -->
+                <ImageView
+                    android:id="@+id/pickup_point_icon_start"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:contentDescription="Pickup Point Icon"
+                    android:focusable="true"
+                    android:src="@drawable/map_marker_remove" />
+            </RelativeLayout>
+
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+            <!--                android:id="@+id/pickup_point_input_start_out"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/pickup_point_input_start"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:hint="Pickup Points"/>-->
+
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_end_loc"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -112,6 +161,56 @@
                 android:padding="16dp"
                 android:text="Click to add your end travel location"
                 android:textAllCaps="false" />
+
+            <RelativeLayout
+                android:id="@+id/pickup_point_input_end_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <!-- TextInputLayout with TextInputEditText -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pickup Point">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/pickup_point_input_end"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Icon on the right side -->
+                <ImageView
+                    android:id="@+id/pickup_point_icon_end"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:contentDescription="Pickup Point Icon"
+                    android:focusable="true"
+                    android:src="@drawable/map_marker_remove" />
+            </RelativeLayout>
+
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+            <!--                android:id="@+id/pickup_point_input_end_out"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/pickup_point_input_end"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:hint="Pickup Point"/>-->
+
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
         </LinearLayout>
 
@@ -146,7 +245,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/vehicle_plate_input"
@@ -202,18 +302,7 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:hint="Pickup Points (comma-separated)" />-->
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/pickup_points_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Pickup Points (comma-separated)" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <!--        <EditText-->
         <!--            android:id="@+id/start_time_input"-->
@@ -227,11 +316,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
 
+
+            <!--                android:id="@+id/startTimeInputText"-->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/start_time_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Start Time (Timestamp)" />
+                android:focusable="false"
+                android:hint="Start Time (Timestamp)"
+                android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--        <EditText-->
@@ -244,7 +337,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/end_time_input"
@@ -269,7 +363,8 @@
                 android:id="@+id/max_passengers_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Max Passengers" />
+                android:hint="Max Passengers"
+                android:numeric="integer" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--        <EditText-->
@@ -282,7 +377,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/current_passengers_input"
@@ -301,7 +397,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/trip_status_input"
@@ -326,7 +423,7 @@
                 android:id="@+id/price_per_seat_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Price Per Seat" />
+                android:hint="Price Per Seat (optional)" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--        <EditText-->
@@ -339,7 +436,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rating_input"

@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,6 +48,9 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MapWithSearchFragment extends Fragment implements OnMapReadyCallback {
 
@@ -62,7 +67,8 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
     private SharedViewModel viewModel;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000; // or any unique integer
-
+    double latitude;
+    double longitude;
     String button_clicked;
     String latLng_to_send, loc_name_to_send;
 
@@ -147,10 +153,21 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 // Initialize SharedViewModel
-                viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+//                viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
                 // Setting data in ViewModel
-                viewModel.setLocation(latLng_to_send);
-                viewModel.setLocationName(loc_name_to_send);
+//                viewModel.getClickedButton().observe(getViewLifecycleOwner(), buttonValue -> {
+//                    button_clicked = buttonValue;
+                switch (button_clicked) {
+                    case "startLocButton":
+                        viewModel.setLocationStart(latLng_to_send);
+                        viewModel.setLocationNameStart(loc_name_to_send);
+                        break;
+                    case "endLocButton":
+                        viewModel.setLocationEnd(latLng_to_send);
+                        viewModel.setLocationNameEnd(loc_name_to_send);
+                        break;
+                }
+//                });
                 fm.popBackStack();
             }
         });
@@ -169,8 +186,35 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
                     String locationName = place.getName();
                     LatLng latLng = place.getLatLng();
 
+                    String regex = "lat/lng:\\s*\\(([-+]?\\d*\\.\\d+),\\s*([-+]?\\d*\\.\\d+)\\)";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(place.getLatLng().toString());
+
+                    // Check if the pattern matches
+                    if (matcher.find()) {
+                        // Parse latitude and longitude
+                        latitude= Double.parseDouble(matcher.group(1));
+                        longitude = Double.parseDouble(matcher.group(2));
+                    }
+                    Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(
+                                latitude,
+                                longitude,
+                                1); // We only need one result
+
+                        if (addresses != null && !addresses.isEmpty()) {
+                            Address address = addresses.get(0);
+                            //String locationName = address.getFeatureName(); // e.g., building name or street name
+                            String locationName1 = addresses.get(0).getAddressLine(0); // e.g., building name or street name
+                            loc_name_to_send = locationName1;
+                        }
+                    } catch (Exception e) {
+                        Log.e("MapWithSearchFragment", "Geocoder error: " + e.getMessage());
+                    }
                     // Call your method to handle this place
-                    getCoordinatesAndPlaceMarker(placeId, locationName);
+                    //getCoordinatesAndPlaceMarker(placeId, locationName);
+                    getCoordinatesAndPlaceMarker(placeId, loc_name_to_send);
                 } else if (result.getResultCode() == AutocompleteActivity.RESULT_ERROR) {
                     //Status status = Autocomplete.getStatus(result.getData());
                     //Log.e("MapWithSearchFragment", "Error: " + status.getStatusMessage());
@@ -237,8 +281,39 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
                             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                             // Move the camera to the current location
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-                            // Optionally, add a marker for the current location
-                            mMap.addMarker(new MarkerOptions().position(currentLatLng).title("You are here"));
+                            // Add a marker for the current location
+                            //mMap.addMarker(new MarkerOptions().position(currentLatLng).title("You are here!"));
+
+                            // Get the name of the location
+                            Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+                            try {
+                                List<Address> addresses = geocoder.getFromLocation(
+                                        location.getLatitude(),
+                                        location.getLongitude(),
+                                        1); // We only need one result
+
+                                if (addresses != null && !addresses.isEmpty()) {
+                                    Address address = addresses.get(0);
+                                    //String locationName = address.getFeatureName(); // e.g., building name or street name
+                                    String locationName = addresses.get(0).getAddressLine(0); // e.g., building name or street name
+
+                                    // Or you can use address.getAddressLine(0) for a complete address
+
+                                    //Log.i("MapWithSearchFragment", "Location name: " + locationName);
+                                    // Store the location name in a variable if needed
+                                    loc_name_to_send = locationName;
+                                    latLng_to_send = currentLatLng.toString();
+
+                                    // Optional: Update the marker with the location name
+                                    mMap.addMarker(new MarkerOptions()
+                                            .position(currentLatLng)
+                                            .title(locationName));
+                                } else {
+                                    Log.e("MapWithSearchFragment", "No address found for location");
+                                }
+                            } catch (Exception e) {
+                                Log.e("MapWithSearchFragment", "Geocoder error: " + e.getMessage());
+                            }
                         } else {
                             Log.e("MapWithSearchFragment", "Current location is null");
                         }

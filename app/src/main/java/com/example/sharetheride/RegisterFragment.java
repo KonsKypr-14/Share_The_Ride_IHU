@@ -213,25 +213,25 @@ public class RegisterFragment extends Fragment {
 
                                     passenger1.put("passenger_id", "id1");
                                     passenger1.put("name", "Alice Smith");
-                                    passenger1.put("pickup_confirmed", true);
+                                    //passenger1.put("pickup_confirmed", true);
                                     passenger1.put("available", true);
                                     passenger_list.add(passenger1);
 
                                     passenger2.put("passenger_id", "id2");
                                     passenger2.put("name", "Alice Smith");
-                                    passenger2.put("pickup_confirmed", true);
+                                    //passenger2.put("pickup_confirmed", true);
                                     passenger2.put("available", true);
                                     passenger_list.add(passenger2);
 
                                     passenger3.put("passenger_id", "id3");
                                     passenger3.put("name", "Alice Smith");
-                                    passenger3.put("pickup_confirmed", true);
+                                    //passenger3.put("pickup_confirmed", true);
                                     passenger3.put("available", true);
                                     passenger_list.add(passenger3);
 
                                     passenger4.put("passenger_id", "id4");
                                     passenger4.put("name", "Alice Smith");
-                                    passenger4.put("pickup_confirmed", true);
+                                    //passenger4.put("pickup_confirmed", true);
                                     passenger4.put("available", true);
                                     passenger_list.add(passenger4);
 

@@ -1,11 +1,16 @@
 package com.example.sharetheride;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,28 +20,45 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CreateTripFragment extends Fragment  {
 
     private EditText tripIdInput, organizerIdInput, organizerNameInput, vehiclePlateInput, carModelInput;
     private EditText startLocationLatInput, startLocationLngInput, endLocationLatInput, endLocationLngInput;
-    private EditText maxPassengersInput, currentPassengersInput, tripStatusInput, pricePerSeatInput, ratingInput;
+    private EditText maxPassengersInput, currentPassengersInput, tripStatusInput, pricePerSeatInput, ratingInput, pickUpPointStart, pickUpPointEnd;
+    RelativeLayout pickUpPointStart_out, pickUpPointEnd_out;
     private Button createTripButton, startLocButton, endLocButton;
+
+    private Calendar calendar = Calendar.getInstance();
+
+    private List<Trip> tripList;
+    private TripAdapter tripAdapter;
+
+    //TextInputLayout startTimeInput;
+    //EditText startTimeInputText;
+    EditText startTimeInput;
 
     private FirebaseFirestore db;
     FirebaseUser user;
 
+    String button_clicked;
     private SharedViewModel viewModel;
-    String latLng_retrieved, loc_name_retrived;
+    String latLng_retrieved, loc_name_retrived, latLng_retrieved_start, latLng_retrieved_end, loc_name_retrieved_start, loc_name_retrieved_end;
 
     //GoogleMap myMap;
     //SearchView mapSearchView;
@@ -108,16 +130,189 @@ public class CreateTripFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_trip, container, false);
 
+        pickUpPointStart = view.findViewById(R.id.pickup_point_input_start);
+        pickUpPointEnd = view.findViewById(R.id.pickup_point_input_end);
+        pickUpPointStart_out = view.findViewById(R.id.pickup_point_input_start_out);
+        pickUpPointEnd_out = view.findViewById(R.id.pickup_point_input_end_out);
+
+//        if (pickUpPointStart == null);
+//        {
+//            pickUpPointStart.setVisibility(View.GONE);
+//        }
+//        if (pickUpPointEnd == null);
+//        {
+//            pickUpPointEnd.setVisibility(View.GONE);
+//        }
+
         // Initialize SharedViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         // Retrieve the button that was clicked on previous Fragment in order to change the texts on the button (to use only 1 layout and not 2)
-        viewModel.getLocation().observe(getViewLifecycleOwner(), locValue -> {
-            latLng_retrieved = locValue;
+//        viewModel.getLocation().observe(getViewLifecycleOwner(), locValue -> {
+//            latLng_retrieved = locValue;
+//            if (latLng_retrieved != null){
+//                //pickUpPointStart.setVisibility(View.VISIBLE);
+//                //pickUpPointStart.setText(latLng_retrieved);
+//            }
+//        });
+
+        viewModel.getLocationStart().observe(getViewLifecycleOwner(), locValue -> {
+            latLng_retrieved_start = locValue;
+            if (latLng_retrieved_start != null) {
+                //pickUpPointStart.setVisibility(View.VISIBLE);
+                //pickUpPointStart.setText(latLng_retrieved);
+            }
         });
-        viewModel.getLocationName().observe(getViewLifecycleOwner(), locNameValue -> {
-            loc_name_retrived = locNameValue;
+        viewModel.getLocationEnd().observe(getViewLifecycleOwner(), locValue -> {
+            latLng_retrieved_end = locValue;
+            if (latLng_retrieved_end != null) {
+                //pickUpPointStart.setVisibility(View.VISIBLE);
+                //pickUpPointStart.setText(latLng_retrieved);
+            }
         });
+
+        if (latLng_retrieved_start == null) {
+            pickUpPointStart.setVisibility(View.GONE);
+            pickUpPointStart_out.setVisibility(View.GONE);
+            pickUpPointStart.setEnabled(false);
+        }
+        if (latLng_retrieved_end == null) {
+            pickUpPointEnd.setVisibility(View.GONE);
+            pickUpPointEnd_out.setVisibility(View.GONE);
+            pickUpPointStart.setEnabled(false);
+        }
+
+//        viewModel.getLocationNameStart().observe(getViewLifecycleOwner(), locNameValue -> {
+//            loc_name_retrieved_start = locNameValue;
+//
+//            viewModel.getClickedButton().observe(getViewLifecycleOwner(), buttonValue -> {
+//                button_clicked = buttonValue;
+//                switch (button_clicked) {
+//                    case "startLocButton":
+//                        if (loc_name_retrieved_start != null && !loc_name_retrieved_start.isEmpty()) {
+//                            pickUpPointStart.setVisibility(View.VISIBLE);
+//                            pickUpPointStart_out.setVisibility(View.VISIBLE);
+//                            pickUpPointStart.setText(loc_name_retrieved_start);
+//                            pickUpPointStart.setEnabled(false);
+//                        } else {
+//                            pickUpPointStart.setVisibility(View.GONE);
+//                            pickUpPointStart_out.setVisibility(View.GONE);
+//                        }
+//                        break;
+//                    case "endLocButton":
+//                        if (loc_name_retrieved_start != null && !loc_name_retrieved_start.isEmpty()) {
+//                            pickUpPointEnd.setVisibility(View.VISIBLE);
+//                            pickUpPointEnd_out.setVisibility(View.VISIBLE);
+//                            pickUpPointEnd.setText(loc_name_retrieved_start);
+//                            pickUpPointEnd.setEnabled(false);
+//                        } else {
+//                            pickUpPointEnd.setVisibility(View.GONE);
+//                            pickUpPointEnd_out.setVisibility(View.GONE);
+//                        }
+//                        break;
+//                }
+//            });
+//        });
+//
+//        viewModel.getLocationNameEnd().observe(getViewLifecycleOwner(), locNameValue -> {
+//            loc_name_retrieved_end = locNameValue;
+//
+//            viewModel.getClickedButton().observe(getViewLifecycleOwner(), buttonValue -> {
+//                button_clicked = buttonValue;
+//                switch (button_clicked) {
+//                    case "startLocButton":
+//                        if (loc_name_retrieved_end != null && !loc_name_retrieved_end.isEmpty()) {
+//                            pickUpPointStart.setVisibility(View.VISIBLE);
+//                            pickUpPointStart_out.setVisibility(View.VISIBLE);
+//                            pickUpPointStart.setText(loc_name_retrieved_end);
+//                            pickUpPointStart.setEnabled(false);
+//                        } else {
+//                            pickUpPointStart.setVisibility(View.GONE);
+//                            pickUpPointStart_out.setVisibility(View.GONE);
+//                        }
+//                        break;
+//                    case "endLocButton":
+//                        if (loc_name_retrieved_end != null && !loc_name_retrieved_end.isEmpty()) {
+//                            pickUpPointEnd.setVisibility(View.VISIBLE);
+//                            pickUpPointEnd_out.setVisibility(View.VISIBLE);
+//                            pickUpPointEnd.setText(loc_name_retrieved_end);
+//                            pickUpPointEnd.setEnabled(false);
+//                        } else {
+//                            pickUpPointEnd.setVisibility(View.GONE);
+//                            pickUpPointEnd_out.setVisibility(View.GONE);
+//                        }
+//                        break;
+//                }
+//            });
+//        });
+// Observe location name for start
+        viewModel.getLocationNameStart().observe(getViewLifecycleOwner(), locNameValue -> {
+            loc_name_retrieved_start = locNameValue;
+            updatePickUpPoint();
+        });
+
+// Observe location name for end
+        viewModel.getLocationNameEnd().observe(getViewLifecycleOwner(), locNameValue -> {
+            loc_name_retrieved_end = locNameValue;
+            updatePickUpPoint();
+        });
+
+// Observe which button was clicked
+        viewModel.getClickedButton().observe(getViewLifecycleOwner(), buttonValue -> {
+            button_clicked = buttonValue;
+            updatePickUpPoint();
+        });
+
+        ImageView pickupPointIconstart = view.findViewById(R.id.pickup_point_icon_start);
+        ImageView pickupPointIconend = view.findViewById(R.id.pickup_point_icon_end);
+
+        pickupPointIconstart.setOnClickListener(v -> {
+            loc_name_retrieved_start = "";
+            pickUpPointStart.setText("");
+            pickUpPointStart_out.setVisibility(View.GONE);
+            pickUpPointStart.setEnabled(false);
+            viewModel.setLocationStart(latLng_retrieved_start);
+            viewModel.setLocationNameStart(loc_name_retrieved_start);
+            // Handle the icon click
+            //Toast.makeText(getContext(), "Icon clicked!", Toast.LENGTH_SHORT).show();
+        });
+
+        pickupPointIconend.setOnClickListener(v -> {
+            loc_name_retrieved_end = "";
+            pickUpPointEnd.setText("");
+            pickUpPointEnd_out.setVisibility(View.GONE);
+            pickUpPointEnd.setEnabled(false);
+            viewModel.setLocationEnd(latLng_retrieved_end);
+            viewModel.setLocationNameEnd(loc_name_retrieved_end);
+            // Handle the icon click
+            //Toast.makeText(getContext(), "Icon clicked!", Toast.LENGTH_SHORT).show();
+        });
+
+
+//        viewModel.getLocationName().observe(getViewLifecycleOwner(), locNameValue -> {
+//            loc_name_retrived = locNameValue;
+//
+//            viewModel.getClickedButton().observe(getViewLifecycleOwner(), buttonValue -> {
+//                button_clicked = buttonValue;
+//                switch (button_clicked) {
+//                    case "startLocButton":
+//                        if (loc_name_retrived != null && !loc_name_retrived.isEmpty()){
+//                            pickUpPointStart.setVisibility(View.VISIBLE);
+//                            pickUpPointStart.setText(loc_name_retrived);
+//                            pickUpPointStart.setEnabled(false);
+//                            viewModel.setLocationName("");
+//                        }
+//                        break;
+//                    case "endLocButton":
+//                        if (loc_name_retrived != null && !loc_name_retrived.isEmpty()){
+//                            pickUpPointEnd.setVisibility(View.VISIBLE);
+//                            pickUpPointEnd.setText(loc_name_retrived);
+//                            pickUpPointEnd.setEnabled(false);
+//                        }
+//                        break;
+//                }
+//            });
+//        });
 
         /*
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -144,7 +339,15 @@ public class CreateTripFragment extends Fragment  {
         }
 
  */
+        startTimeInput = view.findViewById(R.id.start_time_input);
 
+        // Open Date and Time picker on click
+        startTimeInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimePicker();
+            }
+        });
         user = ((MainActivity) getActivity()).getUser();  // Pass the logged-in user
 
         // Initialize Firestore
@@ -174,7 +377,8 @@ public class CreateTripFragment extends Fragment  {
         String randomId = generateId(28); // 28 characters
         tripIdInput.setText(randomId);
         organizerIdInput.setText(user.getUid().toString());
-        organizerNameInput.setText("Name-Surname");
+
+        loadTripsFromDB();
 
         // Set button click listener
         createTripButton.setOnClickListener(new View.OnClickListener() {
@@ -244,6 +448,54 @@ public class CreateTripFragment extends Fragment  {
         return view;
     }
 
+    // Method to update the visibility and text based on LiveData values
+    private void updatePickUpPoint() {
+        if (button_clicked == null) return;
+
+        switch (button_clicked) {
+            case "startLocButton":
+                if (loc_name_retrieved_start != null && !loc_name_retrieved_start.isEmpty()) {
+                    pickUpPointStart.setVisibility(View.VISIBLE);
+                    pickUpPointStart_out.setVisibility(View.VISIBLE);
+                    pickUpPointStart.setText(loc_name_retrieved_start);
+                    pickUpPointStart.setEnabled(false);
+                } else {
+                    pickUpPointStart.setVisibility(View.GONE);
+                    pickUpPointStart_out.setVisibility(View.GONE);
+                }
+                if (loc_name_retrieved_end != null && !loc_name_retrieved_end.isEmpty()) {
+                    pickUpPointEnd.setVisibility(View.VISIBLE);
+                    pickUpPointEnd_out.setVisibility(View.VISIBLE);
+                    pickUpPointEnd.setText(loc_name_retrieved_end);
+                    pickUpPointEnd.setEnabled(false);
+                } else {
+                    pickUpPointEnd.setVisibility(View.GONE);
+                    pickUpPointEnd_out.setVisibility(View.GONE);
+                }
+                break;
+            case "endLocButton":
+                if (loc_name_retrieved_end != null && !loc_name_retrieved_end.isEmpty()) {
+                    pickUpPointEnd.setVisibility(View.VISIBLE);
+                    pickUpPointEnd_out.setVisibility(View.VISIBLE);
+                    pickUpPointEnd.setText(loc_name_retrieved_end);
+                    pickUpPointEnd.setEnabled(false);
+                } else {
+                    pickUpPointEnd.setVisibility(View.GONE);
+                    pickUpPointEnd_out.setVisibility(View.GONE);
+                }
+                if (loc_name_retrieved_start != null && !loc_name_retrieved_start.isEmpty()) {
+                    pickUpPointStart.setVisibility(View.VISIBLE);
+                    pickUpPointStart_out.setVisibility(View.VISIBLE);
+                    pickUpPointStart.setText(loc_name_retrieved_start);
+                    pickUpPointStart.setEnabled(false);
+                } else {
+                    pickUpPointStart.setVisibility(View.GONE);
+                    pickUpPointStart_out.setVisibility(View.GONE);
+                }
+                break;
+        }
+    }
+
     private static final String ALLOWED_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public String generateId(int length) {
@@ -285,24 +537,86 @@ public class CreateTripFragment extends Fragment  {
         String pricePerSeat = pricePerSeatInput.getText().toString().trim();
         String rating = ratingInput.getText().toString().trim();
 
+        List<Map<String, Object>> passenger_list = new ArrayList<>();
+//        Map<String, Object> passenger1 = new HashMap<>();
+//        Map<String, Object> passenger2 = new HashMap<>();
+//        Map<String, Object> passenger3 = new HashMap<>();
+//        Map<String, Object> passenger4 = new HashMap<>();
+//
+//        passenger1.put("passenger_id", "");
+//        passenger1.put("name", "");
+//        //passenger1.put("pickup_confirmed", true);
+//        passenger1.put("available", true);
+//        passenger_list.add(passenger1);
+//
+//        passenger2.put("passenger_id", "");
+//        passenger2.put("name", "");
+//        //passenger2.put("pickup_confirmed", true);
+//        passenger2.put("available", true);
+//        passenger_list.add(passenger2);
+//
+//        passenger3.put("passenger_id", "");
+//        passenger3.put("name", "");
+//        //passenger3.put("pickup_confirmed", true);
+//        passenger3.put("available", true);
+//        passenger_list.add(passenger3);
+//
+//        passenger4.put("passenger_id", "");
+//        passenger4.put("name", "");
+//        //passenger4.put("pickup_confirmed", true);
+//        passenger4.put("available", true);
+//        passenger_list.add(passenger4);
+
+        int numberOfPassengers = 4; // Change this to the number of passengers you want
+        if (maxPassengers == null || maxPassengers.isEmpty()) {
+            Toast.makeText(getContext(), "Add max number of passengers to create a trip.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (Integer.parseInt(maxPassengers) <= 0) {
+            Toast.makeText(getContext(), "Add max number of passengers to create a trip.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        for (int i = 0; i < Integer.parseInt(maxPassengers); i++) {
+            Map<String, Object> passenger = new HashMap<>();
+            passenger.put("passenger_id", "");
+            passenger.put("name", "");
+            // passenger.put("pickup_confirmed", true); // Uncomment if needed
+            passenger.put("available", true);
+            passenger_list.add(passenger);
+        }
+
         // Create trip map
         Map<String, Object> mapTrip = new HashMap<>();
         mapTrip.put("trip_id", tripId);
         mapTrip.put("organizer_id", user.getUid().toString());
         mapTrip.put("organizer_name", organizerName);
-        mapTrip.put("vehicle_plate", vehiclePlate);
+        //mapTrip.put("vehicle_plate", vehiclePlate);
         mapTrip.put("car_model", carModel);
-        mapTrip.put("start_location", startLocation);
-        mapTrip.put("end_location", endLocation);
-        mapTrip.put("pickup_points", new ArrayList<>()); // Add pickup points if needed
-        mapTrip.put("start_time", new Timestamp(new Date())); // Set current time
-        mapTrip.put("end_time", new Timestamp(new Date())); // Set current time (change as needed)
+        //mapTrip.put("start_location", startLocation); //Example of initial runs
+        if (latLng_retrieved_start == null || loc_name_retrieved_start == null || latLng_retrieved_end == null || loc_name_retrieved_end == null) {
+            Toast.makeText(getContext(), "You have no select a starting or ending location.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (startTimeInput.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), "Select which date/time the trip will start.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        mapTrip.put("start_location", latLng_retrieved_start);
+        mapTrip.put("start_location_name", loc_name_retrieved_start);
+        mapTrip.put("end_location", latLng_retrieved_end);
+        mapTrip.put("end_location_name", loc_name_retrieved_end);
+        //mapTrip.put("pickup_points", new ArrayList<>()); // Add pickup points if needed
+        //mapTrip.put("start_time", new Timestamp(new Date())); // Set current time
+        mapTrip.put("start_time", startTimeInput.getText().toString()); // Set the selected date from user
+        //mapTrip.put("end_time", new Timestamp(new Date())); // Set current time (change as needed)
         mapTrip.put("max_passengers", maxPassengers);
-        mapTrip.put("current_passengers", currentPassengers);
-        mapTrip.put("passengers", new ArrayList<>()); // Add passengers if needed
-        mapTrip.put("trip_status", tripStatus);
+        mapTrip.put("current_passengers", "0");
+        //mapTrip.put("passengers", new ArrayList<>()); // Add passengers if needed
+        mapTrip.put("passengers", passenger_list); // Array of passenger details
+        //mapTrip.put("trip_status", tripStatus);
         mapTrip.put("price_per_seat", pricePerSeat);
-        mapTrip.put("rating", rating);
+        //mapTrip.put("rating", rating);
         mapTrip.put("created_at", new Date());
         mapTrip.put("updated_at", new Date());
 
@@ -317,4 +631,62 @@ public class CreateTripFragment extends Fragment  {
                     Toast.makeText(getContext(), "Error creating trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
+    private void showDateTimePicker() {
+        // Step 1: Open Date Picker Dialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
+            // Set the selected date in the calendar
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Step 2: Open Time Picker Dialog after date is selected
+            TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (view1, hourOfDay, minute) -> {
+                // Set the selected time in the calendar
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                Calendar currentDateTime = Calendar.getInstance();
+
+                // Step 3: Format date and time as "Sunday, 03/11/2024 at 15:00"
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd/MM/yyyy 'at' HH:mm", Locale.getDefault());
+                String formattedDate = dateFormat.format(calendar.getTime());
+
+                // Step 4: Check if the selected date and time are in the past
+                if (calendar.getTimeInMillis() <= currentDateTime.getTimeInMillis()) {
+                    // Show error message and do not update the TextInputEditText
+                    Toast.makeText(requireContext(), "Please select a future date and time.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Display formatted date and time in TextInputEditText
+                startTimeInput.setText(formattedDate);
+
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), DateFormat.is24HourFormat(requireContext()));
+
+            timePickerDialog.show();
+
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void loadTripsFromDB() {
+
+        List<FieldMapper> fieldMappers = new ArrayList<>();
+
+        db.collection("users_collection").document(user.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // Handle the error
+                    return;
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    organizerNameInput.setText(documentSnapshot.getString("name") + documentSnapshot.getString("surname"));
+                }
+            }
+        });
+    }
+
 }
