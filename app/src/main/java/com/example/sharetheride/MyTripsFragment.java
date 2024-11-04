@@ -67,8 +67,8 @@ public class MyTripsFragment extends Fragment {
                     List<MyTrip> tripsList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String tripId = document.getString("trip_id");
-                        String startLocation = document.getString("start_location");
-                        String endLocation = document.getString("end_location");
+                        String startLocation = document.getString("start_location_name");
+                        String endLocation = document.getString("end_location_name");
 
                         String startLocText = startLocation != null ? startLocation.toString() + ", " + startLocation.toString() : "N/A";
                         String endLocText = endLocation != null ? endLocation.toString() + ", " + endLocation.toString() : "N/A";
@@ -128,19 +128,22 @@ public class MyTripsFragment extends Fragment {
         }
 
         class TripViewHolder extends RecyclerView.ViewHolder {
-            TextView textTripId, textTripLocations;
+            TextView textTripId, textTripLocations, text_trip_locations_end, text_trip_locations_start;
             ImageButton buttonDeleteTrip;
 
             TripViewHolder(View itemView) {
                 super(itemView);
                 textTripId = itemView.findViewById(R.id.text_trip_id);
-                textTripLocations = itemView.findViewById(R.id.text_trip_locations);
+                text_trip_locations_end = itemView.findViewById(R.id.text_trip_locations_start);
+                text_trip_locations_start = itemView.findViewById(R.id.text_trip_locations_end);
                 buttonDeleteTrip = itemView.findViewById(R.id.button_delete_trip);
             }
 
             void bind(MyTrip trip) {
                 textTripId.setText(trip.getTripId());
-                textTripLocations.setText(trip.getStartLocation() + " - " + trip.getEndLocation());
+                //textTripLocations.setText(trip.getStartLocation() + " - " + trip.getEndLocation());
+                text_trip_locations_start.setText(trip.getStartLocation());
+                text_trip_locations_end.setText(trip.getEndLocation());
 
                 //buttonDeleteTrip.setOnClickListener(v -> deleteTrip(trip.getDocId()));
                 buttonDeleteTrip.setOnClickListener(v -> confirmDeleteTrip(trip.getDocId()));

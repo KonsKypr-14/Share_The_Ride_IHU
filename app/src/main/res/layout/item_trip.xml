@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:gravity="center_vertical">
 
             <LinearLayout
@@ -71,7 +71,8 @@
             android:layout_marginTop="8dp"
             app:cardBackgroundColor="#F5F5F5"
             app:cardCornerRadius="8dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,6 +114,13 @@
                 android:drawablePadding="8dp"
                 app:drawableStartCompat="@drawable/account"
                 android:textAppearance="?attr/textAppearanceBody2" />
+        </LinearLayout>
+        <!-- Trip Details Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/current_passengers"
@@ -120,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="8dp"
-                app:drawableStartCompat="@drawable/account_plus"
+                app:drawableStartCompat="@drawable/account"
                 android:textAppearance="?attr/textAppearanceBody2" />
         </LinearLayout>
 
@@ -129,7 +137,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/price_per_seat"
@@ -156,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/trip_id"

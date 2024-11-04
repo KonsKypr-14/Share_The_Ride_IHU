@@ -68,6 +68,23 @@ public class CreateTripFragment extends Fragment  {
 
     public CreateTripFragment() {
         // Required empty public constructor
+
+        // Initialize UI elements
+        if (tripIdInput != null) {
+            tripIdInput.setText("");
+            organizerIdInput.setText("");
+            organizerNameInput.setText("");
+            //vehiclePlateInput = view.findViewById(R.id.vehicle_plate_input);
+            //carModelInput = view.findViewById(R.id.car_model_input);
+            startLocationLatInput.setText("");
+            //startLocationLngInput = view.findViewById(R.id.start_location_lng_input);
+            endLocationLatInput.setText("");
+            //endLocationLngInput = view.findViewById(R.id.end_location_lng_input);
+            maxPassengersInput.setText("");
+            //currentPassengersInput = view.findViewById(R.id.current_passengers_input);
+            //tripStatusInput = view.findViewById(R.id.trip_status_input);
+            pricePerSeatInput.setText("");
+        }
     }
 
     private static final String TEXT_ID = "text_id";
@@ -364,10 +381,10 @@ public class CreateTripFragment extends Fragment  {
         endLocationLatInput = view.findViewById(R.id.end_location_input);
         //endLocationLngInput = view.findViewById(R.id.end_location_lng_input);
         maxPassengersInput = view.findViewById(R.id.max_passengers_input);
-        currentPassengersInput = view.findViewById(R.id.current_passengers_input);
-        tripStatusInput = view.findViewById(R.id.trip_status_input);
+        //currentPassengersInput = view.findViewById(R.id.current_passengers_input);
+        //tripStatusInput = view.findViewById(R.id.trip_status_input);
         pricePerSeatInput = view.findViewById(R.id.price_per_seat_input);
-        ratingInput = view.findViewById(R.id.rating_input);
+        //ratingInput = view.findViewById(R.id.rating_input);
         createTripButton = view.findViewById(R.id.create_trip_button);
 
         tripIdInput.setEnabled(false); //Disable the change of the tripId.
@@ -532,10 +549,10 @@ public class CreateTripFragment extends Fragment  {
         String endLocation = endLat;
 
         String maxPassengers = maxPassengersInput.getText().toString().trim();
-        String currentPassengers = currentPassengersInput.getText().toString().trim();
-        String tripStatus = tripStatusInput.getText().toString().trim();
+        //String currentPassengers = currentPassengersInput.getText().toString().trim();
+        //String tripStatus = tripStatusInput.getText().toString().trim();
         String pricePerSeat = pricePerSeatInput.getText().toString().trim();
-        String rating = ratingInput.getText().toString().trim();
+        //String rating = ratingInput.getText().toString().trim();
 
         List<Map<String, Object>> passenger_list = new ArrayList<>();
 //        Map<String, Object> passenger1 = new HashMap<>();
@@ -593,7 +610,8 @@ public class CreateTripFragment extends Fragment  {
         //mapTrip.put("vehicle_plate", vehiclePlate);
         mapTrip.put("car_model", carModel);
         //mapTrip.put("start_location", startLocation); //Example of initial runs
-        if (latLng_retrieved_start == null || loc_name_retrieved_start == null || latLng_retrieved_end == null || loc_name_retrieved_end == null) {
+        if (latLng_retrieved_start == null || loc_name_retrieved_start == null || latLng_retrieved_end == null || loc_name_retrieved_end == null ||
+                latLng_retrieved_start.isEmpty() || loc_name_retrieved_start.isEmpty() || latLng_retrieved_end.isEmpty() || loc_name_retrieved_end.isEmpty()) {
             Toast.makeText(getContext(), "You have no select a starting or ending location.", Toast.LENGTH_LONG).show();
             return;
         }
@@ -625,7 +643,18 @@ public class CreateTripFragment extends Fragment  {
                 .set(mapTrip)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Trip created successfully!", Toast.LENGTH_SHORT).show();
-                    // Optionally, clear input fields or navigate back
+
+                    viewModel.setLocationStart("");
+                    viewModel.setLocationNameStart("");
+                    viewModel.setLocationEnd("");
+                    viewModel.setLocationNameEnd("");
+
+                    String randomId = generateId(28); // 28 characters
+                    tripIdInput.setText(randomId);
+                    carModelInput.setText("");
+                    maxPassengersInput.setText("");
+                    pricePerSeatInput.setText("");
+                    startTimeInput.setText("");
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Error creating trip: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -683,7 +712,7 @@ public class CreateTripFragment extends Fragment  {
                 }
 
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    organizerNameInput.setText(documentSnapshot.getString("name") + documentSnapshot.getString("surname"));
+                    organizerNameInput.setText(documentSnapshot.getString("name") + " " + documentSnapshot.getString("surname"));
                 }
             }
         });

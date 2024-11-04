@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -242,6 +243,25 @@ public class RegisterFragment extends Fragment {
                                     map_trip.put("created_at", new Date()); // Current date/time for created_at
                                     map_trip.put("updated_at", new Date()); // Current date/time for updated_at
 
+                                    FirebaseUser user = mAuth.getCurrentUser();
+
+                                    if (user != null) {
+                                        user.sendEmailVerification()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            // Sign the user out after sending verification email
+                                                            mAuth.signOut();
+                                                            // Prompt user to check email and verify
+                                                            // You can direct them to the login screen here
+                                                        } else {
+                                                            // Handle failure to send verification email
+                                                        }
+                                                    }
+                                                });
+                                    }
+
                                     db.collection("users_collection").document(mAuth.getUid())
                                             .set(map_user, SetOptions.merge())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -259,22 +279,22 @@ public class RegisterFragment extends Fragment {
                                                 }
                                             });
 
-                                    db.collection("trips").document(mAuth.getUid())
-                                            .set(map_trip, SetOptions.merge())
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                    Toast.makeText(getActivity(), "Account created.", Toast.LENGTH_SHORT).show();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    //Log.w(TAG, "Error writing document", e);
-                                                    Toast.makeText(getActivity(), "Error writing document.", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+//                                    db.collection("trips").document(mAuth.getUid())
+//                                            .set(map_trip, SetOptions.merge())
+//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                @Override
+//                                                public void onSuccess(Void aVoid) {
+//                                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+//                                                    Toast.makeText(getActivity(), "Account created.", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            })
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    //Log.w(TAG, "Error writing document", e);
+//                                                    Toast.makeText(getActivity(), "Error writing document.", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            });
 
                                     Fragment loginFragment = LoginFragment.newInstance(R.string.click_to_login);
                                     // Get the FragmentManager to perform the transaction
@@ -296,7 +316,6 @@ public class RegisterFragment extends Fragment {
                                 }
                             }
                         });
-
             }
         });
 

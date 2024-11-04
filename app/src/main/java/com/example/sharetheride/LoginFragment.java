@@ -146,7 +146,15 @@ public class LoginFragment extends Fragment {
                                     //Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     //updateUI(user);
-                                    Toast.makeText(getActivity(), "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                                    if (user != null && user.isEmailVerified()) {
+                                        Toast.makeText(getActivity(), "Login Successful.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // Email is not verified
+                                        Toast.makeText(getActivity(), "User not found or verification of email is not completed.", Toast.LENGTH_LONG).show();
+                                        mAuth.signOut(); // Sign out unverified user
+                                        return;
+                                    }
 
                                     //// User is logged in, set to "Logout"
                                     //loginMenuItem.setTitle(R.string.menu_logout);

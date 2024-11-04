@@ -1,8 +1,5 @@
 package com.example.sharetheride;
 
-import com.google.firebase.firestore.GeoPoint;
-
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -16,10 +13,13 @@ public class Trip {
     private String trip_id;
     private String organizerId;
     private String organizerName;
+    private String organizer_name;
     private String vehiclePlate;
     private String carModel;
     private String start_location;
+    private String start_location_name;
     private String endLocation;
+    private String end_location_name;
     private List<PickupPoint> pickupPoints;
     private String startTime;
     private String endTime;
@@ -28,6 +28,7 @@ public class Trip {
     private List<Passenger> passengers;
     private String tripStatus;
     private String pricePerSeat;
+    private String price_per_seat;
     private String rating;
     private Date createdAt;
     private Date updatedAt;
@@ -37,18 +38,21 @@ public class Trip {
     }
 
     // Full constructor
-    public Trip(String trip_id, String organizerId, String organizerName, String vehiclePlate,
-                String carModel, String start_location, String endLocation,
+    public Trip(String trip_id, String organizerId, String organizerName, String organizer_name, String vehiclePlate,
+                String carModel, String start_location, String endLocation, String start_location_name, String end_location_name,
                 List<PickupPoint> pickupPoints, String startTime, String endTime,
                 String maxPassengers, String currentPassengers, List<Passenger> passengers,
-                String tripStatus, String pricePerSeat, String rating, Date createdAt, Date updatedAt) {
+                String tripStatus, String pricePerSeat, String price_per_seat, String rating, Date createdAt, Date updatedAt) {
         this.trip_id = trip_id;
         this.organizerId = organizerId;
         this.organizerName = organizerName;
+        this.organizer_name = organizer_name;
         this.vehiclePlate = vehiclePlate;
         this.carModel = carModel;
         this.start_location = start_location;
+        this.start_location_name = start_location_name;
         this.endLocation = endLocation;
+        this.end_location_name = end_location_name;
         this.pickupPoints = pickupPoints;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -57,6 +61,7 @@ public class Trip {
         this.passengers = passengers;
         this.tripStatus = tripStatus;
         this.pricePerSeat = pricePerSeat;
+        this.price_per_seat = price_per_seat;
         this.rating = rating;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -88,6 +93,14 @@ public class Trip {
         this.organizerName = organizerName;
     }
 
+    public String getorganizer_name() {
+        return organizer_name;
+    }
+
+    public void setorganizer_name(String organizer_name) {
+        this.organizer_name = organizer_name;
+    }
+
     public String getvehicle_plate() {
         return vehiclePlate;
     }
@@ -112,12 +125,28 @@ public class Trip {
         this.start_location = start_location;
     }
 
+    public String getstart_location_name() {
+        return start_location_name;
+    }
+
+    public void setstart_location_name(String start_location_name) {
+        this.start_location_name = start_location_name;
+    }
+
     public String getend_location() {
         return endLocation;
     }
 
     public void setend_location(String endLocation) {
         this.endLocation = endLocation;
+    }
+
+    public String getend_location_name() {
+        return end_location_name;
+    }
+
+    public void setend_location_name(String end_location_name) {
+        this.end_location_name = end_location_name;
     }
 
     public List<PickupPoint> getPickupPoints() {
@@ -182,6 +211,14 @@ public class Trip {
 
     public void setPricePerSeat(String pricePerSeat) {
         this.pricePerSeat = pricePerSeat;
+    }
+
+    public String getprice_per_seat() {
+        return price_per_seat;
+    }
+
+    public void setprice_per_seat(String price_per_seat) {
+        this.price_per_seat = price_per_seat;
     }
 
     public String getRating() {

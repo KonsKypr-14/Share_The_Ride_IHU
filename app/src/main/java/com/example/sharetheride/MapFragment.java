@@ -69,10 +69,10 @@ public class MapFragment extends Fragment {
         endLocationLatInput = view.findViewById(R.id.end_location_input);
         //endLocationLngInput = view.findViewById(R.id.end_location_lng_input);
         maxPassengersInput = view.findViewById(R.id.max_passengers_input);
-        currentPassengersInput = view.findViewById(R.id.current_passengers_input);
-        tripStatusInput = view.findViewById(R.id.trip_status_input);
+        //currentPassengersInput = view.findViewById(R.id.current_passengers_input);
+        //tripStatusInput = view.findViewById(R.id.trip_status_input);
         pricePerSeatInput = view.findViewById(R.id.price_per_seat_input);
-        ratingInput = view.findViewById(R.id.rating_input);
+        //ratingInput = view.findViewById(R.id.rating_input);
         createTripButton = view.findViewById(R.id.create_trip_button);
 
         // Set button click listener
@@ -105,10 +105,10 @@ public class MapFragment extends Fragment {
         String endLocation = endLat;
 
         String maxPassengers = maxPassengersInput.getText().toString().trim();
-        String currentPassengers = currentPassengersInput.getText().toString().trim();
-        String tripStatus = tripStatusInput.getText().toString().trim();
+        //String currentPassengers = currentPassengersInput.getText().toString().trim();
+        //String tripStatus = tripStatusInput.getText().toString().trim();
         String pricePerSeat = pricePerSeatInput.getText().toString().trim();
-        String rating = ratingInput.getText().toString().trim();
+        //String rating = ratingInput.getText().toString().trim();
 
         // Create trip map
         Map<String, Object> mapTrip = new HashMap<>();
@@ -123,11 +123,11 @@ public class MapFragment extends Fragment {
         mapTrip.put("start_time", new Timestamp(new Date())); // Set current time
         mapTrip.put("end_time", new Timestamp(new Date())); // Set current time (change as needed)
         mapTrip.put("max_passengers", maxPassengers);
-        mapTrip.put("current_passengers", currentPassengers);
+        //mapTrip.put("current_passengers", currentPassengers);
         mapTrip.put("passengers", new ArrayList<>()); // Add passengers if needed
-        mapTrip.put("trip_status", tripStatus);
+        //mapTrip.put("trip_status", tripStatus);
         mapTrip.put("price_per_seat", pricePerSeat);
-        mapTrip.put("rating", rating);
+        //mapTrip.put("rating", rating);
         mapTrip.put("created_at", new Date());
         mapTrip.put("updated_at", new Date());
 

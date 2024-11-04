@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
             loginMenuItem.setIcon(R.drawable.account);  // Set the icon accordingly
 
             //navigationView.getMenu().findItem(R.id.group_profile).setVisible(false);
-            navigationView.getMenu().setGroupVisible(R.id.group_profile, true);
+            navigationView.getMenu().setGroupVisible(R.id.group_profile, false);
         } else {
             // User is logged in, set to "Logout"
             loginMenuItem.setTitle(R.string.menu_logout);
