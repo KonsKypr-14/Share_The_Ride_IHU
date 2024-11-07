@@ -18,7 +18,7 @@ public class Trip {
     private String carModel;
     private String start_location;
     private String start_location_name;
-    private String endLocation;
+    private String end_location;
     private String end_location_name;
     private List<PickupPoint> pickupPoints;
     private String startTime;
@@ -39,7 +39,7 @@ public class Trip {
 
     // Full constructor
     public Trip(String trip_id, String organizerId, String organizerName, String organizer_name, String vehiclePlate,
-                String carModel, String start_location, String endLocation, String start_location_name, String end_location_name,
+                String carModel, String start_location, String end_location, String start_location_name, String end_location_name,
                 List<PickupPoint> pickupPoints, String startTime, String endTime,
                 String maxPassengers, String currentPassengers, List<Passenger> passengers,
                 String tripStatus, String pricePerSeat, String price_per_seat, String rating, Date createdAt, Date updatedAt) {
@@ -51,7 +51,7 @@ public class Trip {
         this.carModel = carModel;
         this.start_location = start_location;
         this.start_location_name = start_location_name;
-        this.endLocation = endLocation;
+        this.end_location = end_location;
         this.end_location_name = end_location_name;
         this.pickupPoints = pickupPoints;
         this.startTime = startTime;
@@ -134,11 +134,11 @@ public class Trip {
     }
 
     public String getend_location() {
-        return endLocation;
+        return end_location;
     }
 
-    public void setend_location(String endLocation) {
-        this.endLocation = endLocation;
+    public void setend_location(String end_location) {
+        this.end_location = end_location;
     }
 
     public String getend_location_name() {

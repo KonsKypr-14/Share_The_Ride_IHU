@@ -1,18 +1,36 @@
 package com.example.sharetheride;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import android.content.Intent;
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
     private List<Trip> tripList;
+
+    private static Context context;
 
     public TripAdapter(List<Trip> tripList) {
         this.tripList = tripList;
@@ -22,6 +40,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     @Override
     public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trip, parent, false);
+        this.context = parent.getContext();
         return new TripViewHolder(view);
     }
 
@@ -91,6 +110,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         TextView rating;
         TextView createdAt;
 
+        Button view_on_map_button, join_ride_button;
+
+        Double latitude_start, longitude_start, latitude_end, longitude_end;
+
+        String trip_id_text;
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth;
+
         public TripViewHolder(@NonNull View itemView) {
             super(itemView);
             /*
@@ -99,15 +127,89 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             description = itemView.findViewById(R.id.text_description);
              */
 
+            view_on_map_button = itemView.findViewById(R.id.view_on_map);
+            join_ride_button = itemView.findViewById(R.id.join_ride);
+
+            view_on_map_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String regex = "lat/lng:\\s*\\(([-+]?\\d*\\.\\d+),\\s*([-+]?\\d*\\.\\d+)\\)";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher_start = pattern.matcher(startLocation.getText().toString());
+                    Matcher matcher_end = pattern.matcher(endLocation.getText().toString());
+
+                    // Check if the pattern matches
+                    if (matcher_start.find()) {
+                        // Parse latitude and longitude
+                        latitude_start = Double.parseDouble(matcher_start.group(1));
+                        longitude_start = Double.parseDouble(matcher_start.group(2));
+                    }
+                    if (matcher_end.find()) {
+                        // Parse latitude and longitude
+                        latitude_end = Double.parseDouble(matcher_end.group(1));
+                        longitude_end = Double.parseDouble(matcher_end.group(2));
+                    }
+                    String uri = "http://maps.google.com/maps?saddr=" + latitude_start + "," + longitude_start + "&daddr=" + latitude_end + "," + longitude_end;
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    context.startActivity(intent);
+                }
+            });
+
+
+            join_ride_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    trip_id_text = tripId.getText().toString().replace("Trip ID: ", "");
+                    // Reference to the specific document in "trips" collection
+                    DocumentReference tripDocRef = db.collection("trips").document(trip_id_text);
+// Check if the document exists and retrieve the `passengers` array
+                    tripDocRef.get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+
+                            if (document.exists()) {
+                                // Document exists, retrieve the passengers array
+                                List<Map<String, Object>> passengers = (List<Map<String, Object>>) document.get("passengers");
+                                if (passengers != null) {
+                                    boolean hasAvailableSlot = false;
+                                    // Iterate through the passengers list to check for availability
+                                    for (Map<String, Object> passenger : passengers) {
+                                        Boolean isAvailable = (Boolean) passenger.get("available");
+                                        if (isAvailable != null && isAvailable) {
+                                            hasAvailableSlot = true;
+                                            break;
+                                        }
+                                    }
+                                    if (hasAvailableSlot) {
+                                        Toast.makeText(context, "There is an available slot.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "No available slot.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Passengers list is empty or not found.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                // Document does not exist
+                                Toast.makeText(context, "Document does not exist", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Handle any errors
+                            Toast.makeText(context, "Failed to retrieve document: " + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+
             tripId = itemView.findViewById(R.id.trip_id);
             organizerName = itemView.findViewById(R.id.organizer_name);
             organizer_name = itemView.findViewById(R.id.organizer_name);
             vehiclePlate = itemView.findViewById(R.id.vehicle_plate);
             carModel = itemView.findViewById(R.id.car_model);
             startLocation = itemView.findViewById(R.id.start_location);
-            start_location_name = itemView.findViewById(R.id.start_location);
+            start_location_name = itemView.findViewById(R.id.start_location_name);
             endLocation = itemView.findViewById(R.id.end_location);
-            end_location_name = itemView.findViewById(R.id.end_location);
+            end_location_name = itemView.findViewById(R.id.end_location_name);
             maxPassengers = itemView.findViewById(R.id.max_passengers);
             currentPassengers = itemView.findViewById(R.id.current_passengers);
             tripStatus = itemView.findViewById(R.id.trip_status);

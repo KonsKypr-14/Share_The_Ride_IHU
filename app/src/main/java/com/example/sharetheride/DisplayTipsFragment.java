@@ -23,6 +23,7 @@ public class DisplayTipsFragment extends Fragment {
     private TripAdapter tripAdapter;
     private List<Trip> tripList;
 
+
     public DisplayTipsFragment() {
         // Required empty public constructor
     }
