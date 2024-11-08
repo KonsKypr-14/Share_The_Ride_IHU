@@ -1,6 +1,9 @@
 package com.example.sharetheride;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +14,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import android.content.Intent;
-import android.net.Uri;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
@@ -110,6 +108,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         TextView rating;
         TextView createdAt;
 
+        String name, surname, organizer_id;
+
+        Integer positionAvailable;
+
+        FirebaseUser user;
+
         Button view_on_map_button, join_ride_button;
 
         Double latitude_start, longitude_start, latitude_end, longitude_end;
@@ -117,7 +121,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         String trip_id_text;
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth;
 
         public TripViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -174,15 +177,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                                 if (passengers != null) {
                                     boolean hasAvailableSlot = false;
                                     // Iterate through the passengers list to check for availability
+                                    positionAvailable = 0; //First position is the 0 of the array.
                                     for (Map<String, Object> passenger : passengers) {
                                         Boolean isAvailable = (Boolean) passenger.get("available");
                                         if (isAvailable != null && isAvailable) {
                                             hasAvailableSlot = true;
                                             break;
                                         }
+                                        positionAvailable = positionAvailable + 1;
                                     }
+                                    //confirmJoinTrip(trip.getDocId());
+                                    confirmJoinTrip(trip_id_text, positionAvailable);
                                     if (hasAvailableSlot) {
-                                        Toast.makeText(context, "There is an available slot.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "There is an available slot. Position: " + positionAvailable, Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(context, "No available slot.", Toast.LENGTH_SHORT).show();
                                     }
@@ -217,6 +224,129 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             price_per_seat = itemView.findViewById(R.id.price_per_seat);
             rating = itemView.findViewById(R.id.rating);
             createdAt = itemView.findViewById(R.id.created_at); // Add createdAt TextView in your layout
+        }
+
+        private void confirmJoinTrip(String tripDocId, Integer positionAvailable) {
+            // Show confirmation dialog
+            new AlertDialog.Builder(context)
+                    .setTitle("Join the trip")
+                    .setMessage("Would you like to join the trip?")
+                    .setPositiveButton("Yes", (dialog, which) -> joinTrip(tripDocId, positionAvailable))
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .show();
+        }
+
+        private void joinTrip(String tripDocId, Integer positionAvailable) {
+            //Update the database with the Passenger Name, Available False and Passenger ID.
+
+            DocumentReference tripDocRef = db.collection("trips").document(tripDocId);
+//// Step 1: Retrieve the document
+//            tripDocRef.get().addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//
+//                    if (document.exists()) {
+//                        // Step 2: Get the `passengers` array
+//                        List<Map<String, Object>> passengers = (List<Map<String, Object>>) document.get("passengers");
+//
+//                        if (passengers != null) {
+//                            // Step 3: Modify the specific item in the array
+//                            for (Map<String, Object> passenger : passengers) {
+//                                if (passenger.get("passenger_id").equals("specific_passenger_id")) {  // Replace with the ID of the passenger you want to update
+//                                    passenger.put("available", false);  // Update the value
+//                                    break;
+//                                }
+//                            }
+//
+//                            // Step 4: Update the modified array in Firestore
+//                            tripDocRef.update("passengers", passengers)
+//                                    .addOnSuccessListener(aVoid -> {
+//                                        // Successfully updated
+//                                        Toast.makeText(context, "Passenger updated successfully!", Toast.LENGTH_SHORT).show();
+//                                    })
+//                                    .addOnFailureListener(e -> {
+//                                        // Error updating
+//                                        Toast.makeText(context, "Error updating passenger: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    });
+//                        } else {
+//                            Toast.makeText(context, "Passengers array not found.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    } else {
+//                        Toast.makeText(context, "Document does not exist.", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    // Error retrieving document
+//                    Toast.makeText(context, "Error fetching document: " + task.getException(), Toast.LENGTH_SHORT).show();
+//                }
+//            });
+
+            user = ((MainActivity) context).getUser();  // Pass the logged-in user
+            // Assuming 'user' and 'context' are available in this scope
+            db.collection("users_collection")
+                    .document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+
+                            name = documentSnapshot.getString("name");
+                            surname = documentSnapshot.getString("surname");
+                            tripDocRef.get().addOnCompleteListener(task -> {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+
+                                    if (document.exists()) {
+                                        organizer_id = document.get("organizer_id").toString();
+
+                                        if (!organizer_id.contentEquals(user.getUid().toString())) {
+                                            // Step 2: Get the `passengers` array
+                                            List<Map<String, Object>> passengers = (List<Map<String, Object>>) document.get("passengers");
+
+                                            if (passengers != null && positionAvailable >= 0 && positionAvailable < passengers.size()) {
+                                                // Step 3: Modify the specific item in the array at the given index
+                                                Map<String, Object> passenger = passengers.get(positionAvailable);
+
+                                                // Check if this spot is indeed available
+                                                Boolean isAvailable = (Boolean) passenger.get("available");
+                                                if (isAvailable != null && isAvailable) {
+                                                    passenger.put("available", false); // Mark it as no longer available
+                                                    passenger.put("passenger_id", user.getUid()); // Insert the new passenger's ID
+                                                    passenger.put("name", name + ' ' + surname); // Insert the new passenger's ID
+
+                                                    // Step 4: Update the modified array in Firestore
+                                                    tripDocRef.update("passengers", passengers)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                // Successfully updated
+                                                                Toast.makeText(context, "Passenger slot updated successfully!", Toast.LENGTH_SHORT).show();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                // Error updating
+                                                                Toast.makeText(context, "Error updating passenger slot: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            });
+                                                } else {
+                                                    Toast.makeText(context, "The specified slot is not available.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(context, "Passengers array not found or invalid index.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(context, "You cannot join your own trips.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Document does not exist.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    // Error retrieving document
+                                    Toast.makeText(context, "Error fetching document: " + task.getException(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(context, "You cannot join your own trips", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }).addOnFailureListener(e -> Toast.makeText(context, "Failed to load trips", Toast.LENGTH_SHORT).show());
+
         }
     }
 }
