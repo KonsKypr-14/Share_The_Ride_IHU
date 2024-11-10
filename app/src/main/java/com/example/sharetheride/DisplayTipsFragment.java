@@ -17,7 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayTipsFragment extends Fragment {
+public class DisplayTipsFragment extends Fragment implements TripAdapter.OnTripDataUpdatedListener {
+
 
     private RecyclerView recyclerView;
     private TripAdapter tripAdapter;
@@ -49,7 +50,7 @@ public class DisplayTipsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         tripList = new ArrayList<>();
-        tripAdapter = new TripAdapter(tripList);
+        tripAdapter = new TripAdapter(tripList, this);
         recyclerView.setAdapter(tripAdapter);
 
         loadTripsFromDB();
@@ -68,10 +69,18 @@ public class DisplayTipsFragment extends Fragment {
                         tripList.add(trip);
                     }
                     tripAdapter.notifyDataSetChanged();
+                    // Update data in adapter
+                    //tripAdapter.updateTrips(tripList);
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors here
                     Log.e("DisplayTipsFragment", "Error fetching data", e);
                 });
+    }
+
+    @Override
+    public void onTripDataUpdated() {
+        // Reload data from Firestore after an update to 'passengers' field
+        loadTripsFromDB();
     }
 }

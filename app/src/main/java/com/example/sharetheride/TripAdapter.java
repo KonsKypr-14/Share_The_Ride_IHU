@@ -29,9 +29,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     private List<Trip> tripList;
 
     private static Context context;
+    private final OnTripDataUpdatedListener onTripDataUpdatedListener;
 
-    public TripAdapter(List<Trip> tripList) {
+    // Define the interface for the callback
+    public interface OnTripDataUpdatedListener {
+        void onTripDataUpdated();
+    }
+
+    public TripAdapter(List<Trip> tripList, OnTripDataUpdatedListener listener) {
         this.tripList = tripList;
+        this.onTripDataUpdatedListener = listener;
     }
 
     @NonNull
@@ -42,9 +49,27 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         return new TripViewHolder(view);
     }
 
+
+//    public static class TripViewHolder extends RecyclerView.ViewHolder {
+    // UI elements for Trip item
+//
+//        public TripViewHolder(View itemView) {
+//            super(itemView);
+//            // Initialize UI elements
+//        }
+//
+//        public void bind(Trip trip) {
+//            // Bind trip data to the view
+//        }
+//    }
+
+
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        Trip trip = tripList.get(position);
+        Trip trip = tripList.get(position);        // Bind trip data to the view
+        holder.bind(trip);
+        holder.bind_listener(this.onTripDataUpdatedListener);
+        // Notify the fragment to reload data after successful update
         /*
         holder.destination.setText(trip.getDestination());
         holder.date.setText(trip.getDate());
@@ -90,6 +115,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder {
+
+        OnTripDataUpdatedListener onTripDataUpdatedListener;
+
+        public void bind_listener(OnTripDataUpdatedListener listener) {
+            // Bind trip data to the view
+            this.onTripDataUpdatedListener = listener;
+        }
+
+        public void bind(Trip trip) {
+            // Bind trip data to the view
+        }
+
+
         //TextView destination, date, description;
         TextView tripId;
         TextView organizerName;
@@ -97,7 +135,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         TextView vehiclePlate;
         TextView carModel;
         TextView startLocation;
-        TextView start_location_name ;
+        TextView start_location_name;
         TextView endLocation;
         TextView end_location_name;
         TextView maxPassengers;
@@ -107,19 +145,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         TextView price_per_seat;
         TextView rating;
         TextView createdAt;
-
-        String name, surname, organizer_id;
-
+        String name, surname, organizer_id, current_passengers;
         Integer positionAvailable;
-
         FirebaseUser user;
-
         Button view_on_map_button, join_ride_button;
-
         Double latitude_start, longitude_start, latitude_end, longitude_end;
-
         String trip_id_text;
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         public TripViewHolder(@NonNull View itemView) {
@@ -239,7 +270,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         private void joinTrip(String tripDocId, Integer positionAvailable) {
             //Update the database with the Passenger Name, Available False and Passenger ID.
 
-            DocumentReference tripDocRef = db.collection("trips").document(tripDocId);
 //// Step 1: Retrieve the document
 //            tripDocRef.get().addOnCompleteListener(task -> {
 //                if (task.isSuccessful()) {
@@ -280,6 +310,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 //                }
 //            });
 
+            DocumentReference tripDocRef = db.collection("trips").document(tripDocId);
             user = ((MainActivity) context).getUser();  // Pass the logged-in user
             // Assuming 'user' and 'context' are available in this scope
             db.collection("users_collection")
@@ -301,6 +332,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                                         if (!organizer_id.contentEquals(user.getUid().toString())) {
                                             // Step 2: Get the `passengers` array
                                             List<Map<String, Object>> passengers = (List<Map<String, Object>>) document.get("passengers");
+                                            current_passengers = document.getString("current_passengers");
 
                                             if (passengers != null && positionAvailable >= 0 && positionAvailable < passengers.size()) {
                                                 // Step 3: Modify the specific item in the array at the given index
@@ -312,11 +344,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                                                     passenger.put("available", false); // Mark it as no longer available
                                                     passenger.put("passenger_id", user.getUid()); // Insert the new passenger's ID
                                                     passenger.put("name", name + ' ' + surname); // Insert the new passenger's ID
-
+                                                    current_passengers = String.valueOf(Integer.parseInt(current_passengers) + 1);
                                                     // Step 4: Update the modified array in Firestore
-                                                    tripDocRef.update("passengers", passengers)
+                                                    tripDocRef.update("passengers", passengers,
+                                                                    "current_passengers", current_passengers)
                                                             .addOnSuccessListener(aVoid -> {
                                                                 // Successfully updated
+                                                                onTripDataUpdatedListener.onTripDataUpdated(); //Reload all the Trips from DB in order to update the current Passengers
                                                                 Toast.makeText(context, "Passenger slot updated successfully!", Toast.LENGTH_SHORT).show();
                                                             })
                                                             .addOnFailureListener(e -> {
@@ -340,13 +374,17 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                                     Toast.makeText(context, "Error fetching document: " + task.getException(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-
                         } else {
                             Toast.makeText(context, "You cannot join your own trips", Toast.LENGTH_SHORT).show();
-
                         }
                     }).addOnFailureListener(e -> Toast.makeText(context, "Failed to load trips", Toast.LENGTH_SHORT).show());
 
         }
+    }
+
+    public void updateTrips(List<Trip> newTrips) {
+        this.tripList.clear();
+        this.tripList.addAll(newTrips);
+        notifyDataSetChanged();
     }
 }

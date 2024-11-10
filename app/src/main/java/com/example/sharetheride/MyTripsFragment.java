@@ -278,6 +278,8 @@ public class MyTripsFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     List<Map<String, Object>> passengers = (List<Map<String, Object>>) documentSnapshot.get("passengers");
 
+                    String current_passengers = documentSnapshot.getString("current_passengers");
+
                     if (passengers != null) {
                         // Create a new list to store the updated passengers
                         List<Map<String, Object>> updatedPassengers = new ArrayList<>(passengers);
@@ -293,11 +295,13 @@ public class MyTripsFragment extends Fragment {
 
                                 // Update the passenger at the specific index
                                 updatedPassengers.set(i, updatedPassenger);
+                                current_passengers = String.valueOf(Integer.parseInt(current_passengers) - 1);
 
                                 // Update the entire passengers array
                                 db.collection("trips")
                                         .document(tripDocId)
-                                        .update("passengers", updatedPassengers)
+                                        .update("passengers", updatedPassengers,
+                                                "current_passengers", current_passengers)
                                         .addOnSuccessListener(aVoid -> {
                                             Toast.makeText(getContext(), "You have benn removed from the trip", Toast.LENGTH_SHORT).show();
                                         })
