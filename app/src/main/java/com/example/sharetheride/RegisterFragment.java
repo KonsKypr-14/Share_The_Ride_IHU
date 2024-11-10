@@ -173,7 +173,7 @@ public class RegisterFragment extends Fragment {
                                     map_user.put("phone_number", "");
                                     map_user.put("role", "");
                                     map_user.put("surname", "");
-                                    map_user.put("vehicle_plate", "");
+                                    map_user.put("full_name", "");
 
                                     //Trip Map for DB
                                     Map<String, Object> map_trip = new HashMap<>();

@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Trip Details Section -->
+    <!-- The Jointed Trips Section -->
     <androidx.cardview.widget.CardView
+        android:id="@+id/jointed_trip_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -21,11 +22,11 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textViewJointedTrips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Trip Details"
+                android:text="The Jointed Trips"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="?attr/colorPrimary" />
 
@@ -42,7 +43,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/text_trip_id"
+                        android:id="@+id/text_jointed_trip_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Trip ID"
@@ -62,7 +63,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
-                        android:id="@+id/text_trip_locations_start"
+                        android:id="@+id/text_jointed_trip_locations_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -82,7 +83,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
-                        android:id="@+id/text_trip_locations_end"
+                        android:id="@+id/text_jointed_trip_locations_end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -93,7 +94,7 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:id="@+id/button_delete_trip"
+                    android:id="@+id/button_delete_jointed_trip"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
