@@ -2,6 +2,7 @@ package com.example.sharetheride;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Trip {
     private String destination;
@@ -25,13 +26,14 @@ public class Trip {
     private String endTime;
     private String maxPassengers;
     private String currentPassengers;
-    private List<Passenger> passengers;
+    public List<Passenger> passengers;
     private String tripStatus;
     private String pricePerSeat;
     private String price_per_seat;
     private String rating;
     private Date createdAt;
     private Date updatedAt;
+    //private List<Map<String, Object>> passengers; // Array of passengers
 
     public Trip() {
         // Default constructor required for calls to DataSnapshot.getValue(Trip.class)
@@ -42,7 +44,8 @@ public class Trip {
                 String carModel, String start_location, String end_location, String start_location_name, String end_location_name,
                 List<PickupPoint> pickupPoints, String startTime, String endTime,
                 String maxPassengers, String currentPassengers, List<Passenger> passengers,
-                String tripStatus, String pricePerSeat, String price_per_seat, String rating, Date createdAt, Date updatedAt) {
+                String tripStatus, String pricePerSeat, String price_per_seat, String rating, Date createdAt, Date updatedAt//, List<Map<String, Object>> passengers
+                ) {
         this.trip_id = trip_id;
         this.organizerId = organizerId;
         this.organizerName = organizerName;
@@ -65,9 +68,18 @@ public class Trip {
         this.rating = rating;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.passengers = passengers;
     }
 
     // Getters and setters for all fields
+
+    //public List<Map<String, Object>> getPassengers() {
+    //    return passengers;
+    //}
+
+//    public void setPassengers(List<Map<String, Object>> passengers) {
+//        this.passengers = passengers;
+//    }
 
     public String gettrip_id() {
         return trip_id;
@@ -276,27 +288,25 @@ public class Trip {
     }
 
     public static class Passenger {
-        private String passengerId;
+        private String passenger_id;
         private String name;
-        private boolean pickupConfirmed;
         private boolean available;
 
         public Passenger() {
         }
 
-        public Passenger(String passengerId, String name, boolean pickupConfirmed, boolean available) {
-            this.passengerId = passengerId;
+        public Passenger(String passenger_id, String name, boolean pickupConfirmed, boolean available) {
+            this.passenger_id = passenger_id;
             this.name = name;
-            this.pickupConfirmed = pickupConfirmed;
             this.available = available;
         }
 
-        public String getPassengerId() {
-            return passengerId;
+        public String getpassenger_id() {
+            return passenger_id;
         }
 
-        public void setPassengerId(String passengerId) {
-            this.passengerId = passengerId;
+        public void setpassenger_id(String passenger_id) {
+            this.passenger_id = passenger_id;
         }
 
         public String getName() {
@@ -305,14 +315,6 @@ public class Trip {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public boolean isPickupConfirmed() {
-            return pickupConfirmed;
-        }
-
-        public void setPickupConfirmed(boolean pickupConfirmed) {
-            this.pickupConfirmed = pickupConfirmed;
         }
 
         public boolean isAvailable() {

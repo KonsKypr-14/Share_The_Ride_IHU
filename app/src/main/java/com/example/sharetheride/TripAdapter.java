@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -27,6 +29,8 @@ import java.util.regex.Pattern;
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
 
     private List<Trip> tripList;
+
+    FirebaseUser user;
 
     private static Context context;
     private final OnTripDataUpdatedListener onTripDataUpdatedListener;
@@ -66,6 +70,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
+
+        user = ((MainActivity) context).getUser();  // Pass the logged-in user
+
         Trip trip = tripList.get(position);        // Bind trip data to the view
         holder.bind(trip);
         holder.bind_listener(this.onTripDataUpdatedListener);
@@ -78,6 +85,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
 
         // Bind trip data to the UI components
+        for (int i = 0; i < trip.passengers.size(); i++) {
+            if (trip.passengers.get(i).getpassenger_id().toString().equals(user.getUid())){
+                holder.join_ride_button.setText("Already Joined");
+                holder.join_ride_button.setClickable(false);
+            }
+        }
+
         holder.tripId.setText("Trip ID: " + trip.gettrip_id());
         holder.organizerName.setText("Organizer name: " + trip.getOrganizerName());
         holder.organizer_name.setText("Organizer name: " + trip.getorganizer_name());
@@ -153,6 +167,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         String trip_id_text;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        List<Trip> tripListTemp;
+
+        List<Trip.Passenger> passengers;
+
         public TripViewHolder(@NonNull View itemView) {
             super(itemView);
             /*
@@ -190,6 +208,35 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
                 }
             });
 
+            tripListTemp = new ArrayList<>();
+
+            db.collection("trips") // Change to the correct collection name
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            Trip trip = document.toObject(Trip.class);
+                            tripListTemp.add(trip);
+                        }
+                        // Update data in adapter
+                        //tripAdapter.updateTrips(tripList);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors here
+                        Log.e("DisplayTipsFragment", "Error fetching data", e);
+                    });
+
+//            DocumentReference tripDocRef = db.collection("trips").document(tripDocId);
+//            tripDocRef.update("passengers", passengers,
+//                            "current_passengers", current_passengers)
+//                    .addOnSuccessListener(aVoid -> {
+//                        // Successfully updated
+//                        onTripDataUpdatedListener.onTripDataUpdated(); //Reload all the Trips from DB in order to update the current Passengers
+//                        Toast.makeText(context, "Passenger slot updated successfully!", Toast.LENGTH_SHORT).show();
+//                    })
+//                    .addOnFailureListener(e -> {
+//                        // Error updating
+//                        Toast.makeText(context, "Error updating passenger slot: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    });
 
             join_ride_button.setOnClickListener(new View.OnClickListener() {
                 @Override
