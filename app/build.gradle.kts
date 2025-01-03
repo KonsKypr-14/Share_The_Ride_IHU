@@ -72,20 +72,20 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-        val nav_version = "2.8.0"
+    val nav_version = "2.8.0"
 
-        // Jetpack Compose integration
-        implementation("androidx.navigation:navigation-compose:$nav_version")
+    // Jetpack Compose integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
-        // Views/Fragments integration
-        implementation("androidx.navigation:navigation-fragment:$nav_version")
-        implementation("androidx.navigation:navigation-ui:$nav_version")
+    // Views/Fragments integration
+    implementation("androidx.navigation:navigation-fragment:$nav_version")
+    implementation("androidx.navigation:navigation-ui:$nav_version")
 
-        // Feature module support for Fragments
-        implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+    // Feature module support for Fragments
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
 
-        // Testing Navigation
-        androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    // Testing Navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
 
@@ -95,7 +95,7 @@ dependencies {
 
     implementation(libs.play.services.maps)      // Google Maps SDK for Android
     //implementation(libs.google.places)           // Google Places API for location search
-    implementation("com.google.android.libraries.places:places:3.5.0")
+    implementation("com.google.android.libraries.places:places:3.5.0") // Google Places API for location search
     //implementation("com.google.android.material:material:1.9.0")
     //implementation("com.google.android.gms:play-services-maps:18.0.0")
     //implementation("com.google.android.libraries.places:places:2.7.0")

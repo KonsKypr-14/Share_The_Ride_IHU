@@ -88,8 +88,8 @@ public class MyTripsFragment extends Fragment {
                         String startLocation = document.getString("start_location_name");
                         String endLocation = document.getString("end_location_name");
 
-                        String startLocText = startLocation != null ? startLocation + ", " + startLocation : "N/A";
-                        String endLocText = endLocation != null ? endLocation + ", " + endLocation : "N/A";
+                        String startLocText = startLocation != null ? startLocation : "N/A";
+                        String endLocText = endLocation != null ? endLocation : "N/A";
 
                         // Add to tripsList
                         tripsList.add(new MyTrip(tripId, startLocText, endLocText, document.getId()));
@@ -138,8 +138,8 @@ public class MyTripsFragment extends Fragment {
                                     String startLocation = document.getString("start_location_name");
                                     String endLocation = document.getString("end_location_name");
 
-                                    String startLocText = startLocation != null ? startLocation + ", " + startLocation : "N/A";
-                                    String endLocText = endLocation != null ? endLocation + ", " + endLocation : "N/A";
+                                    String startLocText = startLocation != null ? startLocation : "N/A";
+                                    String endLocText = endLocation != null ? endLocation : "N/A";
 
                                     // Add to jointedTripList
                                     jointedTripList.add(new JointedTrip(tripId, startLocText, endLocText, document.getId()));
@@ -441,8 +441,8 @@ public class MyTripsFragment extends Fragment {
             TripViewHolder(View itemView) {
                 super(itemView);
                 textTripId = itemView.findViewById(R.id.text_trip_id);
-                text_trip_locations_start = itemView.findViewById(R.id.text_trip_locations_end);
-                text_trip_locations_end = itemView.findViewById(R.id.text_trip_locations_start);
+                text_trip_locations_start = itemView.findViewById(R.id.text_trip_locations_start);
+                text_trip_locations_end = itemView.findViewById(R.id.text_trip_locations_end);
                 buttonDeleteTrip = itemView.findViewById(R.id.button_delete_trip);
             }
 
