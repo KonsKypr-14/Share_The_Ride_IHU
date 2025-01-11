@@ -219,12 +219,12 @@ public class ProfileFragment extends Fragment {
 
                     Map<String, Object> map_business = new HashMap<>();
 
-                    map_business.put("car_model", "");
-                    map_business.put("car_size", "");
+                    //.put("car_model", "");
+                    //map_business.put("car_size", "");
                     map_business.put("email", email_input.getText().toString());
                     map_business.put("name", name_input.getText().toString());
                     map_business.put("phone_number", phone_number_input.getText().toString());
-                    map_business.put("role", "");
+                    //map_business.put("role", "");
                     map_business.put("surname", surname_input.getText().toString());
                     map_business.put("full_name", name_input.getText().toString() + " " + surname_input.getText().toString());
                     db.collection("users_collection").document(mAuth.getUid())

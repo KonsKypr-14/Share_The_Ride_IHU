@@ -22,8 +22,8 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="password_re">Re-enter password</string>
-    <string name="click_to_login">Click to login</string>
-    <string name="click_to_register">Click to Register</string>
+    <string name="click_to_login">Already a user? Login</string>
+    <string name="click_to_register">Not a user? Register</string>
     <string name="click_to_reset">Click to Reset Password</string>
     <string name="login">Login</string>
     <string name="name">Name</string>

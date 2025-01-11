@@ -3,6 +3,7 @@ package com.example.sharetheride;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -123,9 +124,20 @@ public class MapWithSearchFragment extends Fragment implements OnMapReadyCallbac
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-
         // Initialize Places API
-        Places.initialize(getActivity().getApplicationContext(), "AIzaSyBShreWrfH1g9yIAmcn8DxgHkCUOv0ttCI");
+        //Places.initialize(getActivity().getApplicationContext(), );
+        try {
+            ApplicationInfo applicationInfo = getActivity()
+                    .getPackageManager()
+                    .getApplicationInfo(getActivity().getPackageName(), PackageManager.GET_META_DATA);
+            String apiKey = applicationInfo.metaData.getString("com.google.android.geo.API_KEY");
+
+            // Initialize Places API with the retrieved API key
+            Places.initialize(getActivity().getApplicationContext(), apiKey);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            Log.e("PlacesInit", "Failed to load API key from manifest.");
+        }
         placesClient = Places.createClient(getActivity());
 
         // Map setup

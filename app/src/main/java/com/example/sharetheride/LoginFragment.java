@@ -49,7 +49,7 @@ public class LoginFragment extends Fragment {
     }
 
     TextInputEditText editText_email, editText_password;
-    Button buttonLog;
+    Button buttonLog, buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView_register, textView_reset;
@@ -70,6 +70,7 @@ public class LoginFragment extends Fragment {
         editText_email = layout.findViewById(R.id.email);
         editText_password = layout.findViewById(R.id.password);
         buttonLog = layout.findViewById(R.id.login_btn);
+        buttonReg = layout.findViewById(R.id.register_btn);
         progressBar = layout.findViewById(R.id.progressbar);
         textView_register = layout.findViewById(R.id.registerNow);
         textView_reset = layout.findViewById(R.id.resetPass);
@@ -112,6 +113,25 @@ public class LoginFragment extends Fragment {
         // Commit the transaction
         fragmentTransaction.commit();
         */
+            }
+        });
+
+        buttonReg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment registerFragment = RegisterFragment.newInstance(R.string.click_to_register);
+                // Get the FragmentManager to perform the transaction
+                FragmentManager fragmentManager = getParentFragmentManager();
+                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                // Optionally set animations for fragment transition
+                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
+                // Replace the current fragment with RegisterFragment
+                fragmentTransaction.replace(R.id.home_content, registerFragment);
+                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
+                fragmentTransaction.addToBackStack(null);
+                // Commit the transaction
+                fragmentTransaction.commit();
             }
         });
 

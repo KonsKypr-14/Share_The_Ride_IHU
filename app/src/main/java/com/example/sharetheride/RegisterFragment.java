@@ -42,7 +42,7 @@ public class RegisterFragment extends Fragment {
     private static final String TEXT_ID = "text_id";
 
     TextInputEditText editText_email, editText_password, editText_password_re;
-    Button buttonReg;
+    Button buttonReg, buttonLog;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
@@ -86,6 +86,7 @@ public class RegisterFragment extends Fragment {
         editText_password = layout.findViewById(R.id.password);
         editText_password_re = layout.findViewById(R.id.password_re);
         buttonReg = layout.findViewById(R.id.register_btn);
+        buttonLog = layout.findViewById(R.id.login_btn);
         progressBar = layout.findViewById(R.id.progressbar);
         textView = layout.findViewById(R.id.loginNow);
         mAuth = FirebaseAuth.getInstance();
@@ -98,6 +99,25 @@ public class RegisterFragment extends Fragment {
                 //startActivity(intent);
                 //finish();
 
+                Fragment loginFragment = LoginFragment.newInstance(R.string.click_to_login);
+                // Get the FragmentManager to perform the transaction
+                FragmentManager fragmentManager = getParentFragmentManager();
+                // Start a FragmentTransaction to replace LoginFragment with RegisterFragment
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                // Optionally set animations for fragment transition
+                fragmentTransaction.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit);
+                // Replace the current fragment with RegisterFragment
+                fragmentTransaction.replace(R.id.home_content, loginFragment);
+                // Add the transaction to the back stack, so pressing "Back" returns to LoginFragment
+                fragmentTransaction.addToBackStack(null);
+                // Commit the transaction
+                fragmentTransaction.commit();
+            }
+        });
+
+        buttonLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Fragment loginFragment = LoginFragment.newInstance(R.string.click_to_login);
                 // Get the FragmentManager to perform the transaction
                 FragmentManager fragmentManager = getParentFragmentManager();
